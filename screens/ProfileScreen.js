@@ -10,11 +10,14 @@ import * as SecureStore from 'expo-secure-store';
 import { getProfile } from '../api/apiAcount';
 import FooterComponent from '../components/FooterComponent';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { value } from 'deprecated-react-native-prop-types/DeprecatedTextInputPropTypes';
+import { Alert } from 'react-native';
 
 const ProfileScreen = () => {
     data = [1, 2, 3, 4, 5, 6]
     const [active, setActive] = useState('post');
     const [openSetting, setOpenSetting] = useState(false)
+    const [avatar, setAvatar] = useState(require('../assets/images/user_default.png'))
     const [profile, setProfile] = useState({
         "id": '',
         "username": '',
@@ -33,8 +36,31 @@ const ProfileScreen = () => {
     })
     const navigation = useNavigation();
 
+    const handleSelect = (value) => {
+        if (value == "EditProfile") {
+            navigation.navigate("EditProfile")
+        } else if (value == "Logout") {
+            Alert.alert("Thông báo", "Bạn có muốn đăng xuất?", [
+                {
+                    text: 'Không',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Có',
+                    onPress: () => {
+                        SecureStore.deleteItemAsync('accessToken').then(
+                            navigation.navigate('Login')
+                        )
+                    }
+                },
+
+            ])
+        }
+        setOpenSetting(false)
+    }
+
     useEffect(() => {
-        // const token = await SecureStore.getItemAsync('accessToken')
         let token = ''
         async function getToken() {
             token = await SecureStore.getItemAsync('accessToken')
@@ -42,8 +68,11 @@ const ProfileScreen = () => {
                 const config = {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
-                getProfile(config).then(res =>
-                    setProfile(res.data)).catch(
+                getProfile(config).then(res => {
+                    setProfile(res.data)
+                    setAvatar({ uri: res.data.avatar })
+                }
+                ).catch(
                 )
             }
 
@@ -71,7 +100,7 @@ const ProfileScreen = () => {
                         <View>
                             <Image
                                 className='rounded-full w-20 h-20'
-                                source={{ uri: profile.avatar }}
+                                source={avatar}
                             />
                         </View>
                         <View className="justify-center">
@@ -134,14 +163,14 @@ const ProfileScreen = () => {
                             },
                             {
                                 key: 'Đăng xuất',
-                                value: 'Login'
+                                value: 'Logout'
                             }
                         ]}
 
                         renderItem={({ item }) =>
                         (
                             <TouchableOpacity
-                                onPress={() => navigation.navigate(item.value)}>
+                                onPress={() => handleSelect(item.value)}>
                                 <View style={style.item}>
                                     <Text style={style.select}>
                                         {item.key}

@@ -1,34 +1,112 @@
-import { View, Text, Keyboard, TextInput, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, Keyboard, TextInput, ScrollView, StyleSheet, StatusBar, SafeAreaView } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import { KeyboardAvoidingView } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native'
 import { TouchableOpacity } from 'react-native'
-import { ArrowLeftIcon, CalendarDaysIcon } from 'react-native-heroicons/solid'
+import { ArrowLeftIcon, CalendarDaysIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
 import { useNavigation } from '@react-navigation/native'
 import { Image } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native'
+import * as SecureStore from 'expo-secure-store';
 import SelectDropdown from 'react-native-select-dropdown'
+import { getProfile } from '../api/apiAcount'
+import { FlatList } from 'react-native'
+import { Button } from 'react-native'
+
 
 
 const EditProfile = () => {
 
-    // const [isLoanding, setLoanding] = useState(false);
+    // const [fileResponse, setFileResponse] = useState([]);
+
+    // const handleDocumentSelection = useCallback(async () => {
+    //     try {
+    //         const response = await DocumentPicker.pick({
+    //             presentationStyle: 'fullScreen',
+    //         });
+    //         setFileResponse(response);
+    //     } catch (err) {
+    //         console.warn(err);
+    //     }
+    // }, []);
     const [profile, setProfile] = useState({
-        id: 1,
-        username: 'oanhpham',
-        dob: '20/12/2023',
-        email: 'phamoanh22365@gmail.com',
-        phone: '0941176021',
-        gender: 1
+        "id": '',
+        "username": '',
+        "password": null,
+        "name": '',
+        "email": '',
+        "phonenumber": '',
+        "address": null,
+        "dob": null,
+        "sex": '',
+        "role": '',
+        "avatar": "",
+        "active": '',
+        "createdAt": "",
+        "updatedAt": ""
     })
+    const [avatar, setAvatar] = useState(require('../assets/images/user_default.png'))
+    const sex = ['Nữ', 'Nam']
     const navigation = useNavigation();
     const [date, setDate] = useState(new Date());
+    const [dataAvatar, setDataAvatar] = useState([
+        {
+            key: 'Thay đổi ảnh đại diện',
+            value: 'UploadImage'
+        },
+        {
+            key: 'Hủy',
+            value: 'EditProfile'
+        }
+    ])
     const [openDate, setOpenDate] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setDate(currentDate);
+        setProfile({ ...profile, dob: currentDate })
     };
+
+    useEffect(() => {
+        let token = ''
+        async function getToken() {
+            token = await SecureStore.getItemAsync('accessToken')
+            if (token) {
+                const config = {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+                getProfile(config).then(res => {
+                    setProfile(res.data)
+                    if (res.data.avatar) {
+                        setDataAvatar([
+                            {
+                                key: 'Thay đổi ảnh đại diện',
+                                value: 'UploadImage'
+                            },
+                            {
+                                key: 'Xóa ảnh hiện tại',
+                                value: 'RemoveCurrentImage'
+                            },
+                            {
+                                key: 'Hủy',
+                                value: 'EditProfile'
+                            }
+                        ])
+                        setAvatar({ uri: res.data.avatar })
+                    }
+                    if (res.data.dob) {
+                        setDate(new Date(res.data.dob))
+                    }
+                }
+                ).catch(
+                )
+            }
+
+        }
+
+        getToken()
+    }, [])
 
     const handleDismissKeyboard = () => {
         Keyboard.dismiss()
@@ -39,12 +117,31 @@ const EditProfile = () => {
         return subDateStr[0];
     }
 
+    const handleSubmit = () => {
+        console.log(profile);
+    }
+
+    const handleOpen = () => {
+        setIsOpen(true)
+    }
+    const handleSelect = (value) => {
+        if (value === "UploadImage") {
+            navigation.navigate("UploadImage")
+        } else if (value === "RemoveCurrentImage") {
+
+        } else {
+            navigation.navigate("EditProfile")
+
+        }
+        setIsOpen(false)
+    }
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            className="flex-1"
+            keyboardVerticalOffset={20}
+            className="flex-1 bg-white"
         >
-
             <TouchableWithoutFeedback
                 onPress={handleDismissKeyboard}
             >
@@ -54,7 +151,7 @@ const EditProfile = () => {
                         <View >
                             <View className="flex-row justify-start  mt-12 mb-5">
                                 <TouchableOpacity
-                                    onPress={() => navigation.navigate('Home')}
+                                    onPress={() => navigation.navigate('Profile')}
                                     className="bg-yellow-400 p-2 rounded-tr-2xl rounded-bl-2xl ml-4">
                                     <ArrowLeftIcon size="20" color="black" />
                                 </TouchableOpacity>
@@ -68,10 +165,13 @@ const EditProfile = () => {
                                 <View className="mr-5">
                                     <Image
                                         className='rounded-full w-20 h-20'
-                                        source={require('../assets/images/chef_6.png')}
+                                        source={avatar}
                                     />
                                 </View>
-                                <Text className="self-center color-[#3578E5] font-bold">Thay đổi ảnh cá nhân</Text>
+                                <TouchableWithoutFeedback
+                                    onPress={handleOpen}>
+                                    <Text className="self-center color-[#3578E5] font-bold">Thay đổi ảnh cá nhân</Text>
+                                </TouchableWithoutFeedback>
                             </View>
 
                             <View className="form space-y-2 mt-10">
@@ -80,28 +180,27 @@ const EditProfile = () => {
                                 <TextInput
                                     className="py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
                                     placeholder="john@gmail.com"
-                                // onChangeText={text => setAccount({ ...account, username: text })}
+                                    value={profile.username}
+                                    onChangeText={text => setProfile({ ...profile, username: text })}
                                 />
                                 <Text className="text-gray-700 ml-4">Email</Text>
 
                                 <TextInput
-                                    className="py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl"
-                                    secureTextEntry
-                                    placeholder="........"
-                                // onChangeText={text => setAccount({ ...account, password: text })}
+                                    className="py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
+                                    placeholder="john@gmail.com"
+                                    value={profile.email}
+                                    onChangeText={text => setProfile({ ...profile, email: text })}
 
                                 />
 
                                 <Text className="text-gray-700 ml-4">Ngày sinh</Text>
-                                {/* <View
-                                    className="flex-row justify-between items-center py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl"
-                                > */}
                                 <TouchableOpacity
-                                    className="flex-row justify-between items-center py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl"
+                                    className="flex-row justify-between items-center py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
                                     onPress={() => setOpenDate(!openDate)}
                                 >
                                     <Text>
-                                        {formatDate(date.toLocaleString())}</Text>
+                                        {profile.dob ? formatDate(date.toLocaleString()) : ""}
+                                    </Text>
                                     <CalendarDaysIcon size="24" color="black" />
                                 </TouchableOpacity>
                                 {
@@ -117,41 +216,70 @@ const EditProfile = () => {
                                 <Text className="text-gray-700 ml-4">Số điện thoại</Text>
 
                                 <TextInput
-                                    className="py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl"
-                                    secureTextEntry
-                                    placeholder="........"
-                                // onChangeText={text => setAccount({ ...account, password: text })}
+                                    className="py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
+                                    placeholder="Số điện thoại"
+                                    value={profile.phonenumber}
+                                    onChangeText={text => setProfile({ ...profile, phonenumber: text })}
 
                                 />
 
                                 <Text className="text-gray-700 ml-4">Giới tính</Text>
+
                                 <SelectDropdown
-                                    data={[
-                                        "Nam",
-                                        "Nữ"
-                                    ]}>
+                                    data={sex}
+                                    onSelect={(selectedItem, index) => {
+                                        console.log(selectedItem, index)
+                                    }}
+                                    buttonStyle={styles.dropdown1BtnStyle}
+                                    buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                                    rowStyle={styles.dropdown1RowStyle}
+                                    rowTextStyle={styles.dropdown1RowTxtStyle}
+                                    defaultValue={sex[profile.sex]}
+                                    renderDropdownIcon={() => {
+                                        return <ChevronDownIcon color="black" />
+                                    }}
+                                >
 
                                 </SelectDropdown>
 
 
-                                <TouchableOpacity className=" py-3 bg-yellow-400 rounded-xl"
-
+                                <TouchableOpacity
+                                    className=" py-3 bg-yellow-400 rounded-xl"
+                                    onPress={handleSubmit}
                                 >
                                     <Text className="text-xl font-bold text-center text-gray-700">Xác nhận</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
+                        {
+                            isOpen &&
+                            <TouchableOpacity
+                                onPress={() => setIsOpen(false)}
+                                className="flex-1 bg-[#5a5a5ada] justify-center"
+                                style={{ position: 'absolute', width: '100%', zIndex: 100 }}
+                            >
+                                <FlatList
+                                    className='my-96 mx-10 bg-white rounded-md'
+                                    data={dataAvatar}
+
+                                    renderItem={({ item }) =>
+                                    (
+                                        <TouchableOpacity onPress={() => handleSelect(item.value)}>
+                                            <View style={styles.item}>
+                                                <Text style={styles.select}>
+                                                    {item.key}
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    )
+
+                                    }
+                                />
+
+                            </TouchableOpacity>
 
 
-                        {/* {
-                        isLoanding &&
-                        <View
-                            className="flex-1 bg-[#ffffffa1] justify-center"
-                            style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 100 }}>
-                            <ActivityIndicator size="large" color='hsl(210,95%,69%)'
-                            />
-                        </View>
-                    } */}
+                        }
 
 
                     </View >
@@ -160,5 +288,31 @@ const EditProfile = () => {
         </KeyboardAvoidingView >
     )
 }
+
+const styles = StyleSheet.create({
+    dropdown1BtnStyle: {
+        width: '100%',
+        height: 50,
+        backgroundColor: 'rgb(243 244 246)',
+        borderRadius: 16,
+        marginTop: 5,
+        marginBottom: 10
+    },
+    dropdown1BtnTxtStyle: { color: '#444', textAlign: 'left' },
+    dropdown1RowTxtStyle: { color: '#444', textAlign: 'left' },
+    dropdown1RowStyle: { backgroundColor: '#EFEFEF', borderBottomColor: '#C5C5C5' },
+    item: {
+        paddingTop: 15,
+        paddingBottom: 10,
+        marginVertical: 5,
+        borderWidth: 1,
+        borderColor: '#fff',
+        borderBottomColor: 'rgb(221 221 221)'
+    },
+    select: {
+        fontSize: 16,
+        textAlign: 'center'
+    }
+})
 
 export default EditProfile

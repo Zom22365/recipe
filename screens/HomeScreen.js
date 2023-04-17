@@ -16,7 +16,8 @@ const HomeScreen = () => {
         <SafeAreaView className="flex-1 bg-white" >
             {/* <View className="flex-1 bg-white" > */}
 
-            <ScrollView showsHorizontalScrollIndicator={false}>
+            <ScrollView showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}>
                 <HeaderComponent />
 
                 <View style={{ height: 418 }}>

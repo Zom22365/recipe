@@ -11,18 +11,14 @@ const HeaderComponent = () => {
     const navigation = useNavigation();
 
     return (
-        // <View className="flex-row justify-between mt-7 px-3 py-3 bg-white">
-        // <View>
+
         <TouchableOpacity
-            // className="mt-7 px-3 py-3"
-            className="px-3 pb-3"
+            className="px-3 pb-3 w-20"
             onPress={() => navigation.navigate('Home')}>
             <Image source={require('../assets/images/logo.png')}
                 style={{ width: 80, height: 24 }} />
         </TouchableOpacity>
-        // </View>
 
-        // </View>
     )
 }
 

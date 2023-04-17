@@ -11,11 +11,7 @@ import { StyleSheet } from 'react-native';
 const FooterComponent = () => {
     const navigation = useNavigation();
     const route = useRoute()
-    const handleLogout = () => {
-        SecureStore.deleteItemAsync('accessToken').then(
-            navigation.navigate('Login')
-        )
-    }
+
 
     const [activeScreen, setActiveScreen] = useState(route.name)
     return (
@@ -28,7 +24,8 @@ const FooterComponent = () => {
                 }
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => navigation.navigate('Search')}>
                 {activeScreen === "Search" ? <MagnifyingGlassIcon size="28" color="black" /> :
                     <MagnifyingGlassIcon size="28" color="gray" />
                 }
@@ -37,7 +34,7 @@ const FooterComponent = () => {
                 <PlusCircleIcon size="28" color="black" />
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={handleLogout}>
+            >
                 {activeScreen === "Bell" ? <BellIcon size="28" color="black" /> :
                     <Bell size="28" color="gray" />
                 }

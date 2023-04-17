@@ -9,6 +9,8 @@ import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import EditProfile from '../screens/EditProfile';
+import UploadImage from '../screens/UploadImage';
+import SearchScreen from '../screens/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +26,8 @@ export default function AppNavigation() {
                 <Stack.Screen name="ForgotPassword" options={{ headerShown: false, gestureEnabled: false }} component={ForgotPasswordScreen} />
                 <Stack.Screen name="Profile" options={{ headerShown: false, gestureEnabled: false }} component={ProfileScreen} />
                 <Stack.Screen name="EditProfile" options={{ headerShown: false, gestureEnabled: false }} component={EditProfile} />
+                <Stack.Screen name="UploadImage" options={{ headerShown: false, gestureEnabled: false }} component={UploadImage} />
+                <Stack.Screen name="Search" options={{ headerShown: false, gestureEnabled: false }} component={SearchScreen} />
 
             </Stack.Navigator>
         </NavigationContainer>
