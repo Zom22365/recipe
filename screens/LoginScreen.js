@@ -31,18 +31,15 @@ const LoginScreen = () => {
             Alert.alert("Nhập mật khẩu.")
         } else {
             setLoanding(true)
-            // await login(account)
-            //     .then(res => {
-            //         setLoanding(false);
-            //         SecureStore.setItemAsync('accessToken', res.data.accessToken);
-            //         navigation.navigate('Home')
-            //     }).catch(err => {
-            //         setLoanding(false);
-            //         alert('Đăng nhập không thành công.')
-
-            //     })
-            navigation.navigate('Home')
-
+            await login(account)
+                .then(res => {
+                    setLoanding(false);
+                    SecureStore.setItemAsync('accessToken', res.data.accessToken);
+                    navigation.navigate('Home')
+                }).catch(err => {
+                    setLoanding(false);
+                    alert('Đăng nhập không thành công.')
+                })
         }
 
     }

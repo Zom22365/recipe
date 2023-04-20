@@ -10,33 +10,68 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native'
 import * as SecureStore from 'expo-secure-store';
 import SelectDropdown from 'react-native-select-dropdown'
-import { getProfile } from '../api/apiAcount'
+import { getProfile, upLoadAvatar } from '../api/apiAcount'
 import { FlatList } from 'react-native'
 import { Button } from 'react-native'
 import * as ImagePicker from 'expo-image-picker';
+import { Alert } from 'react-native'
 
 
 
 const UploadImage = () => {
     const navigation = useNavigation();
     const [image, setImage] = useState(null);
+    const [file, setFile] = useState(null);
+    const [token, setToken] = useState("")
     const [isSelect, setIsSelect] = useState(false)
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
         });
 
-        console.log("RESULT ANDROID")
-        console.log(result.assets[0])
-
         if (!result.canceled) {
+            // console.log("RESULT ANDROID")
+
+
+
             setImage(result.assets[0].uri);
             setIsSelect(true)
         }
     };
+
+
+    async function getToken() {
+        accessToken = await SecureStore.getItemAsync('accessToken')
+        if (accessToken) {
+            setToken(accessToken)
+            return accessToken
+        }
+
+    }
+
+
+
+
+    const handleSubmit = async () => {
+        if (image != null) {
+            let filename = image.split('/').pop();
+            console.log(filename)
+            let match = /\.(\w+)$/.exec(filename);
+            let type = match ? `image/${match[1]}` : `image`;
+            const data = new FormData();
+            data.append('file', { uri: image, name: filename, type });
+            await upLoadAvatar(data, getToken()).then(res => {
+                alert("Cập nhật ảnh thành công.")
+            }).catch(err => {
+                alert("Cập nhật ảnh không thành công.")
+            })
+
+        } else {
+            // If no file selected the show alert
+            alert('Please Select File first');
+        }
+    }
 
     return (
         <View className="flex">
@@ -58,6 +93,7 @@ const UploadImage = () => {
                     isSelect &&
                     <TouchableOpacity
                         className="mt-10 py-3 px-5 bg-yellow-400 rounded-xl"
+                        onPress={handleSubmit}
                     >
                         <Text className="text-xl font-bold text-center text-gray-700">Cập nhật ảnh</Text>
                     </TouchableOpacity>

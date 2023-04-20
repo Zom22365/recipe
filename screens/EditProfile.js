@@ -13,6 +13,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { getProfile } from '../api/apiAcount'
 import { FlatList } from 'react-native'
 import { Button } from 'react-native'
+import RNDateTimePicker from '@react-native-community/datetimepicker'
 
 
 
@@ -206,7 +207,7 @@ const EditProfile = () => {
                                 {
                                     openDate &&
 
-                                    <DateTimePicker
+                                    <RNDateTimePicker
                                         value={date}
                                         onChange={onChange}
                                         display={Platform.OS === 'ios' ? 'spinner' : 'default'}
@@ -228,13 +229,14 @@ const EditProfile = () => {
                                 <SelectDropdown
                                     data={sex}
                                     onSelect={(selectedItem, index) => {
-                                        console.log(selectedItem, index)
+                                        setProfile({ ...profile, sex: index })
                                     }}
                                     buttonStyle={styles.dropdown1BtnStyle}
                                     buttonTextStyle={styles.dropdown1BtnTxtStyle}
                                     rowStyle={styles.dropdown1RowStyle}
                                     rowTextStyle={styles.dropdown1RowTxtStyle}
                                     defaultValue={sex[profile.sex]}
+                                    defaultButtonText={'--Lựa chọn giới tính--'}
                                     renderDropdownIcon={() => {
                                         return <ChevronDownIcon color="black" />
                                     }}
@@ -251,40 +253,43 @@ const EditProfile = () => {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        {
-                            isOpen &&
-                            <TouchableOpacity
-                                onPress={() => setIsOpen(false)}
-                                className="flex-1 bg-[#5a5a5ada] justify-center"
-                                style={{ position: 'absolute', width: '100%', zIndex: 100 }}
-                            >
-                                <FlatList
-                                    className='my-96 mx-10 bg-white rounded-md'
-                                    data={dataAvatar}
-
-                                    renderItem={({ item }) =>
-                                    (
-                                        <TouchableOpacity onPress={() => handleSelect(item.value)}>
-                                            <View style={styles.item}>
-                                                <Text style={styles.select}>
-                                                    {item.key}
-                                                </Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    )
-
-                                    }
-                                />
-
-                            </TouchableOpacity>
-
-
-                        }
 
 
                     </View >
                 </ScrollView>
+
             </TouchableWithoutFeedback>
+
+            {
+                isOpen &&
+                <TouchableOpacity
+                    onPress={() => setIsOpen(false)}
+                    className="flex-1 bg-[#5a5a5ada] justify-center"
+                    style={{ position: 'absolute', width: '100%', zIndex: 100 }}
+                >
+                    <FlatList
+                        className='my-96 mx-10 bg-white rounded-md'
+                        data={dataAvatar}
+
+                        renderItem={({ item }) =>
+                        (
+                            <TouchableOpacity onPress={() => handleSelect(item.value)}>
+                                <View style={styles.item}>
+                                    <Text style={styles.select}>
+                                        {item.key}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        )
+
+                        }
+                    />
+
+                </TouchableOpacity>
+
+
+            }
+
         </KeyboardAvoidingView >
     )
 }

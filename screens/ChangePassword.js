@@ -8,6 +8,7 @@ import { ActivityIndicator } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { login } from '../api/apiAuth';
 import { handleResLogin } from '../api/handleResponse';
+import { changePassword } from '../api/apiAcount';
 
 
 const ChangePassword = () => {
@@ -25,7 +26,16 @@ const ChangePassword = () => {
         Keyboard.dismiss()
     }
 
+    async function getToken() {
+        accessToken = await SecureStore.getItemAsync('accessToken')
+        if (accessToken) {
+            return accessToken
+        }
+
+    }
+
     const handleSubmit = async () => {
+        Keyboard.dismiss()
         if (account.passwordold === "") {
             Alert.alert("Nhập mật khẩu cũ.")
         } else if (account.passwordnew === "") {
@@ -34,16 +44,22 @@ const ChangePassword = () => {
             Alert.alert("Mật khẩu mới không khớp.")
         } else {
             setLoanding(true)
-            await login(account)
-                .then(res => {
-                    setLoanding(false);
-                    alert('Đổi mật khẩu thành công.')
+            const body = {
+                "oldPassword": account.passwordold,
+                "newPasswrod": account.passwordnew
+            }
+            const accessToken = await getToken();
+            await changePassword(body, accessToken).then(res => {
+                setLoanding(false);
+                alert('Đổi mật khẩu thành công.')
 
-                }).catch(err => {
-                    setLoanding(false);
-                    alert('Đổi mật khẩu không thành công.')
+            }).catch(err => {
+                console.log(accessToken);
+                setLoanding(false);
+                alert('Đổi mật khẩu không thành công.')
 
-                })
+            })
+
         }
     }
 

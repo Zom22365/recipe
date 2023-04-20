@@ -1,6 +1,6 @@
 import Config from "react-native-config";
 
-export const API_URL = Config.API_URL
+export const API_URL = "https://appello.serveo.net"
 
 
 export const GET_ACCOUNT_PROFILE = "/account/profile"
