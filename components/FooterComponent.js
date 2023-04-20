@@ -1,7 +1,7 @@
 import { View, TouchableOpacity, Image, Text } from 'react-native'
 import React, { useState } from 'react'
-import { MagnifyingGlassIcon, BellIcon, HomeIcon, UserCircleIcon } from 'react-native-heroicons/solid';
-import { BellIcon as Bell, UserCircleIcon as User, PlusCircleIcon, HomeIcon as Home } from 'react-native-heroicons/outline';
+import { MagnifyingGlassIcon, BellIcon, HomeIcon, UserCircleIcon, PlusCircleIcon } from 'react-native-heroicons/solid';
+import { BellIcon as Bell, UserCircleIcon as User, PlusCircleIcon as Plus, HomeIcon as Home } from 'react-native-heroicons/outline';
 import { FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
@@ -30,11 +30,16 @@ const FooterComponent = () => {
                     <MagnifyingGlassIcon size="28" color="gray" />
                 }
             </TouchableOpacity>
-            <TouchableOpacity>
-                <PlusCircleIcon size="28" color="black" />
+            <TouchableOpacity
+                onPress={() => navigation.navigate('Add')}
+            >
+                {activeScreen === "Add" ? <PlusCircleIcon size="28" color="black" /> :
+                    <Plus size="28" color="black" />
+
+                }
             </TouchableOpacity>
             <TouchableOpacity
-            >
+                onPress={() => navigation.navigate('Comment')}>
                 {activeScreen === "Bell" ? <BellIcon size="28" color="black" /> :
                     <Bell size="28" color="gray" />
                 }

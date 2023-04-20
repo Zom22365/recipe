@@ -15,6 +15,7 @@ import { Alert } from 'react-native';
 
 const ProfileScreen = () => {
     data = [1, 2, 3, 4, 5, 6]
+    data1 = [1, 2, 3, 4,]
     const [active, setActive] = useState('post');
     const [openSetting, setOpenSetting] = useState(false)
     const [avatar, setAvatar] = useState(require('../assets/images/user_default.png'))
@@ -56,6 +57,9 @@ const ProfileScreen = () => {
                 },
 
             ])
+        } else if (value === "ChangePassword") {
+            navigation.navigate("ChangePassword")
+
         }
         setOpenSetting(false)
     }
@@ -86,11 +90,9 @@ const ProfileScreen = () => {
     return (
         <SafeAreaView className="flex-1 bg-white" >
 
-            {/* <View className="flex-1 bg-white" > */}
 
             <ScrollView
                 showsHorizontalScrollIndicator={false}
-            // className="bg-[#efefef] p-3 mx-3"
             >
                 <HeaderComponent />
 
@@ -135,6 +137,13 @@ const ProfileScreen = () => {
                                     )
                                 })
                             }
+                            {active == 'provite' &&
+                                data1.map((item, index) => {
+                                    return (
+                                        <CardFoodComponent key={index} />
+                                    )
+                                })
+                            }
 
                         </View>
                     </View>
@@ -155,7 +164,7 @@ const ProfileScreen = () => {
                         data={[
                             {
                                 key: 'Đổi mật khẩu',
-                                value: 'Home'
+                                value: 'ChangePassword'
                             },
                             {
                                 key: 'Sửa thông tin cá nhân',

@@ -1,0 +1,29 @@
+[
+  {
+    "commentId": 1,
+    "parentId": null,
+    "commet": "Tôi là comment root đầu tiên",
+    "userId": 1,
+    "reply": [
+      {
+        "commentId": 2,
+        "parentId": 1,
+        "commet": "Tôi là comment children đầu tiên",
+        "userId": 2
+      },
+      {
+        "commentId": 3,
+        "parentId": 1,
+        "commet": "Tôi là comment children thứ hai",
+        "userId": 1
+      }
+    ]
+  },
+  {
+    "commentId": 2,
+    "parentId": null,
+    "commet": "Tôi là comment root thư hai",
+    "userId": 3,
+    "reply": []
+  }
+]
