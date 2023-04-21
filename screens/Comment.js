@@ -1,5 +1,7 @@
-import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Button, Platform } from 'react-native';
+
+import DateTimePicker from '@react-native-community/datetimepicker';
 import com from '../data/Comment.json'
 import { SafeAreaView } from 'react-native'
 import { TextInput } from 'react-native'
@@ -49,6 +51,9 @@ const Comment = () => {
 
         </SafeAreaView>
     )
+
+
 }
+
 
 export default Comment

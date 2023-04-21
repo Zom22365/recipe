@@ -61,6 +61,7 @@ const UploadImage = () => {
             const data = new FormData();
             data.append('file', { uri: image, name: filename, type });
             await upLoadAvatar(data, getToken()).then(res => {
+                // cần fig
                 alert("Cập nhật ảnh thành công.")
             }).catch(err => {
                 alert("Cập nhật ảnh không thành công.")

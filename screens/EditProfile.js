@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native'
 import { ArrowLeftIcon, CalendarDaysIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
 import { useNavigation } from '@react-navigation/native'
 import { Image } from 'react-native'
-// import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native'
 import * as SecureStore from 'expo-secure-store';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -63,11 +63,14 @@ const EditProfile = () => {
     ])
     const [openDate, setOpenDate] = useState(false);
     const [isOpen, setIsOpen] = useState(false)
-    // const onChange = (event, selectedDate) => {
-    //     const currentDate = selectedDate || date;
-    //     setDate(currentDate);
-    //     setProfile({ ...profile, dob: currentDate })
-    // };
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        if (Platform.OS === 'android') {
+            setOpenDate(false);
+        }
+        setDate(currentDate);
+        setProfile({ ...profile, dob: currentDate })
+    };
 
     useEffect(() => {
         let token = ''
@@ -113,10 +116,10 @@ const EditProfile = () => {
         Keyboard.dismiss()
     }
 
-    // function formatDate(dateString) {
-    //     var subDateStr = dateString.split(',');
-    //     return subDateStr[0];
-    // }
+    function formatDate(dateString) {
+        var subDateStr = dateString.split(',');
+        return subDateStr[0];
+    }
 
     const handleSubmit = () => {
         console.log(profile);
@@ -194,7 +197,7 @@ const EditProfile = () => {
 
                                 />
 
-                                {/* <Text className="text-gray-700 ml-4">Ngày sinh</Text>
+                                <Text className="text-gray-700 ml-4">Ngày sinh</Text>
                                 <TouchableOpacity
                                     className="flex-row justify-between items-center py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
                                     onPress={() => setOpenDate(!openDate)}
@@ -207,12 +210,14 @@ const EditProfile = () => {
                                 {
                                     openDate &&
 
-                                    <RNDateTimePicker
+                                    <DateTimePicker
+                                        mode={'date'}
+                                        is24Hour={true}
                                         value={date}
                                         onChange={onChange}
                                         display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                                     />
-                                } */}
+                                }
 
                                 <Text className="text-gray-700 ml-4">Số điện thoại</Text>
 
