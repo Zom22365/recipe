@@ -6,7 +6,6 @@ import { TouchableOpacity } from 'react-native'
 import { ArrowLeftIcon, CalendarDaysIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
 import { useNavigation } from '@react-navigation/native'
 import { Image } from 'react-native'
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native'
 import * as SecureStore from 'expo-secure-store';
 import SelectDropdown from 'react-native-select-dropdown'
