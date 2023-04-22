@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import HeaderComponent from '../components/HeaderComponent';
 import Swiper from 'react-native-swiper';
 
@@ -9,12 +9,25 @@ import CategoryComponent from '../components/CategoryComponent';
 import CardFoodComponent from '../components/CardFoodComponent';
 import FooterComponent from '../components/FooterComponent';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getCategories } from '../api/apiCategory';
+import { getRecipeTrending } from '../api/apiTrending';
 
 const HomeScreen = () => {
-    data = [1, 2, 3, 4]
+    const [categories, setCategoies] = useState([])
+    const [trending, setTrending] = useState([])
+
+    useEffect(() => {
+        const res = getCategories();
+        setCategoies(res);
+
+        const resTrending = getRecipeTrending();
+        setTrending(resTrending)
+
+    }, [])
+
+
     return (
         <SafeAreaView className="flex-1 bg-white" >
-            {/* <View className="flex-1 bg-white" > */}
 
             <ScrollView showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
@@ -22,8 +35,10 @@ const HomeScreen = () => {
 
                 <View style={{ height: 418 }}>
                     <Swiper autoplay={false} >
-                        {data.map((item, index) => {
-                            return (<BannerComponent key={index} />)
+                        {trending.map((item, index) => {
+                            if (index < 3) {
+                                return (<BannerComponent key={index} {...item} />)
+                            }
                         })}
                     </Swiper>
                 </View>
@@ -33,21 +48,21 @@ const HomeScreen = () => {
                     <ScrollView horizontal={true}
                         showsHorizontalScrollIndicator={false} >
                         {
-                            data.map((item, index) => {
+                            categories.map((item, index) => {
                                 return (
-                                    <CategoryComponent key={index} />
+                                    <CategoryComponent key={item.id} category={item} />
                                 )
                             })
                         }
                     </ScrollView>
                 </View>
                 <View className="mx-3 pb-10">
-                    <Text className="font-bold text-2xl mb-3">Công thức mới nhất</Text>
+                    <Text className="font-bold text-2xl mb-3">Công thức được xem nhiều</Text>
                     <View className='flex-row justify-between flex-wrap'>
                         {
-                            data.map((item, index) => {
+                            trending.map((item, index) => {
                                 return (
-                                    <CardFoodComponent key={index} />
+                                    <CardFoodComponent key={index} {...item} />
                                 )
                             })
                         }
@@ -56,7 +71,6 @@ const HomeScreen = () => {
                 </View>
             </ScrollView>
             <FooterComponent />
-            {/* </View> */}
         </SafeAreaView>
 
     )

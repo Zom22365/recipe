@@ -18,3 +18,14 @@ export const GET_MAILER_FORGOT_PASSWORD = "/mailer/forgotPassword"
 export const POST_CLOUDING_UPLOAD_AVATAR = "/clouding/upload/avatar"
 export const PUT_CLOUDING_UPDATE_AVATAR = "/clouding/update/avatar"
 
+export const GET_CATEGORIES = "/"
+export const GET_CATEGORIES_BY_ID = "/"
+
+export const GET_RECIPE_BY_ID = "/"
+
+export const GET_COMMENT_BY_POST_ID = "/"
+export const GET_COMMENT_BY_ID = "/"
+
+export const GET_RECIPE_TRENDING = "/"
+
+export const GET_RECIPE_BY_KEYWORD = "/"

@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 import { ScrollView } from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
@@ -10,19 +10,35 @@ import { TouchableOpacity } from 'react-native'
 import CardFoodComponent from '../components/CardFoodComponent'
 import { Keyboard } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native'
+import { getRecipeTrending } from '../api/apiTrending'
+import { getRecipeByKeyWord } from '../api/apiSearch'
 
 const SearchScreen = () => {
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     list = [1, 2, 3, 4]
+    const [trending, setTrending] = useState([])
     const [keyword, setKeyword] = useState("")
+    const [keysearch, setKeySearch] = useState("")
     const [searchResult, setSearchResult] = useState("")
+
+    useEffect(() => {
+
+        const resTrending = getRecipeTrending();
+        setTrending(resTrending)
+
+    }, [])
+
+
     const handleSearch = () => {
         Keyboard.dismiss()
         if (keyword !== "") {
-            console.log(keyword)
-            const result = list.map((item, index) => {
+            setKeySearch(keyword)
+            getRecipeByKeyWord()
+            const searchresult = trending.filter((i, index) => i?.name.includes(keyword))
+            // console.log(searchresult)
+            const result = searchresult.map((item, index) => {
                 return (
-                    <CardFoodComponent key={index} />
+                    <CardFoodComponent key={index} {...item} />
                 )
             })
             setSearchResult(
@@ -55,15 +71,15 @@ const SearchScreen = () => {
                     <View className="mx-3">
                         {
                             searchResult ?
-                                <Text className="font-bold text-xl mb-3">Kết quả: {keyword}</Text> : ""
+                                <Text className="font-bold text-xl mb-3">Kết quả: {keysearch}</Text> : ""
                         }
                         <View className='flex-row justify-between flex-wrap'>
                             {
                                 searchResult ?
                                     searchResult :
-                                    data.map((item, index) => {
+                                    trending.map((item, index) => {
                                         return (
-                                            <CardFoodComponent key={index} />
+                                            <CardFoodComponent key={index} {...item} />
                                         )
                                     })
 

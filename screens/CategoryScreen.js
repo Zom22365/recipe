@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native'
 import { ArrowLeftIcon } from 'react-native-heroicons/solid'
@@ -10,15 +10,24 @@ import HeaderComponent from '../components/HeaderComponent'
 import { ScrollView } from 'react-native'
 import FooterComponent from '../components/FooterComponent'
 import CardFoodComponent from '../components/CardFoodComponent'
+import { getCategoryById } from '../api/apiCategory'
 
 const CategoryScreen = ({ }) => {
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    const [recipes, setRecipes] = useState({})
     const router = useRoute()
     const navigation = useNavigation();
 
     const { id } = router.params
 
-    console.log(id);
+    useEffect(() => {
+        async function getCateById() {
+            const res = await getCategoryById(id);
+            setRecipes(res)
+        }
+        getCateById()
+
+    }, [])
     return (
         <TouchableWithoutFeedback
             onPress={() => Keyboard.dismiss()}>
@@ -29,12 +38,13 @@ const CategoryScreen = ({ }) => {
                     showsVerticalScrollIndicator={false}>
 
                     <View className="mx-3">
-                        <Text className="font-bold text-xl mb-3">Danh mục:</Text>
+                        <Text className="font-bold text-xl mb-3">Danh mục: {recipes.nameCategory}</Text>
                         <View className='flex-row justify-between flex-wrap'>
                             {
-                                data.map((item, index) => {
+                                recipes.listRecipe &&
+                                recipes.listRecipe.map((item, index) => {
                                     return (
-                                        <CardFoodComponent key={index} />
+                                        <CardFoodComponent key={item.id} {...item} />
                                     )
                                 })
 
