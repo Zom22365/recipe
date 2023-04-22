@@ -39,7 +39,7 @@ const FooterComponent = () => {
                 }
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Comment')}>
+                onPress={() => navigation.navigate('Bell')}>
                 {activeScreen === "Bell" ? <BellIcon size="28" color="black" /> :
                     <Bell size="28" color="gray" />
                 }

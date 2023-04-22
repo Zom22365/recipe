@@ -252,7 +252,7 @@ const FormPostScreen = () => {
                             {foodBranch}
                         </View>
                         <View className="mb-5 flex-row justify-between" >
-                            <Text >Hướng dẫn thực hiện:
+                            <Text >Hướng dẫn nấu:
 
                             </Text>
                             <TouchableOpacity

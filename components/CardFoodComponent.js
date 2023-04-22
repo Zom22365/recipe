@@ -2,12 +2,17 @@ import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { StyleSheet } from 'react-native';
 import { BookmarkIcon } from 'react-native-heroicons/outline';
+import { useNavigation } from '@react-navigation/native';
 
 const CardFoodComponent = () => {
+    const navigation = useNavigation();
     return (
         <TouchableOpacity
             className="bg-white rounded-md"
-            style={[style.shadow, { width: '48%' }, { marginBottom: 16 }]}>
+            style={[style.shadow, { width: '48%' }, { marginBottom: 16 }]}
+            onPress={() => navigation.navigate('Detail', {
+                id: 2
+            })}>
             <View>
                 <View >
                     <Image

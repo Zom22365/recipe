@@ -16,6 +16,7 @@ import CategoryScreen from '../screens/CategoryScreen';
 import DetailScreen from '../screens/DetailScreen';
 import Comment from '../screens/Comment';
 import FormPostScreen from '../screens/FormPostScreen';
+import NotiComponent from '../screens/NotiComponent';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,8 +36,8 @@ export default function AppNavigation() {
                 <Stack.Screen name="Search" options={{ headerShown: false, gestureEnabled: false }} component={SearchScreen} />
                 <Stack.Screen name="ChangePassword" options={{ headerShown: false, gestureEnabled: false }} component={ChangePassword} />
                 <Stack.Screen name="Category" options={{ headerShown: false, gestureEnabled: false }} component={CategoryScreen} />
-                <Stack.Screen name="Detail" options={{ headerShown: false, gestureEnabled: false }} component={DetailScreen} />
-                <Stack.Screen name="Comment" options={{ headerShown: false, gestureEnabled: true }} component={Comment} />
+                <Stack.Screen name="Detail" options={{ headerShown: false, gestureEnabled: true }} component={DetailScreen} />
+                <Stack.Screen name="Bell" options={{ headerShown: false, gestureEnabled: true }} component={NotiComponent} />
                 <Stack.Screen name="Add" options={{ headerShown: false, gestureEnabled: true }} component={FormPostScreen} />
 
             </Stack.Navigator>
