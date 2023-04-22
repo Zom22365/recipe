@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "2649250897",
+    "project_id": "recipe-6f8d9",
+    "storage_bucket": "recipe-6f8d9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2649250897:android:7214358e6a7f9709f9ec70",
+        "android_client_info": {
+          "package_name": "com.maiductrung21.recipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2649250897-k2a91cct1gtvjeuer1cdj528p8us6sil.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maiductrung21.recipe",
+            "certificate_hash": "8901112a5b6aef0527cdc2292b3888c156130ec4"
+          }
+        },
+        {
+          "client_id": "2649250897-l6em7ojiuvc1t9b091jdtda36upbs1lt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maiductrung21.recipe",
+            "certificate_hash": "166ebaafd95ce3a63431f8c313089913a069d69c"
+          }
+        },
+        {
+          "client_id": "2649250897-k0i4j6op71otahr0vmrov9h7v58l5qkp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm4VaKAgM4V0-wTXZYT8_tcbT_f-tnKbU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2649250897-k0i4j6op71otahr0vmrov9h7v58l5qkp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
