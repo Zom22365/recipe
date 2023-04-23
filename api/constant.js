@@ -1,6 +1,6 @@
 import Config from "react-native-config";
 
-export const API_URL = "https://tristis.serveo.net"
+export const API_URL = "https://positum.serveo.net"
 
 
 export const GET_ACCOUNT_PROFILE = "/account/profile"
@@ -26,6 +26,7 @@ export const POST_RECIPE = "/post/newFood"
 
 export const GET_COMMENT_BY_POST_ID = "/comment/"
 export const GET_COMMENT_BY_ID = "/"
+export const POST_COMMENT = "/comment/newComment"
 
 export const GET_RECIPE_TRENDING = "/trending/topViewFood"
 export const GET_RECIPE_TRENDING_BY_LIKE = "/trending/topLikeFood"

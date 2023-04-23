@@ -65,26 +65,26 @@ const ProfileScreen = () => {
     }
 
     useEffect(() => {
-        let token = ''
-        async function getToken() {
-            token = await SecureStore.getItemAsync('accessToken')
-            if (token) {
-                const config = {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }
-                getProfile(config).then(res => {
-                    setProfile(res.data)
-                    if (res.data.avatar) {
-                        setAvatar({ uri: res.data.avatar })
-                    }
-                }
-                ).catch(
-                )
+        // let token = ''
+        // async function getToken() {
+        //     token = await SecureStore.getItemAsync('accessToken')
+        //     if (token) {
+        //         const config = {
+        //             headers: { 'Authorization': `Bearer ${token}` }
+        //         }
+        getProfile().then(res => {
+            setProfile(res.data)
+            if (res.data.avatar) {
+                setAvatar({ uri: res.data.avatar })
             }
-
         }
+        ).catch(
+        )
+        //     }
 
-        getToken()
+        // }
+
+        // getToken()
     }, [])
 
 

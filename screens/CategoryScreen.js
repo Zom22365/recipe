@@ -21,11 +21,10 @@ const CategoryScreen = ({ }) => {
     const { id } = router.params
 
     useEffect(() => {
-        async function getCateById() {
-            const res = await getCategoryById(id);
-            setRecipes(res)
-        }
-        getCateById()
+        getCategoryById(id).then(res => {
+            setRecipes({ ...recipes, nameCategory: res?.data?.name })
+        })
+
 
     }, [])
     return (

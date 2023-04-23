@@ -7,8 +7,9 @@ import com from '../data/Comment'
 import { SafeAreaView } from 'react-native'
 import { TextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native';
-import { getCommentByPostId } from '../api/apiComment';
+import { getCommentByPostId, postComment } from '../api/apiComment';
 import { EllipsisHorizontalIcon } from 'react-native-heroicons/outline';
+import { getProfile } from '../api/apiAcount';
 
 const Comment = (props) => {
     const avatarDefault = require('../assets/images/user_default.png')
@@ -16,17 +17,17 @@ const Comment = (props) => {
     const [countReply, setCountReply] = useState([])
     const [isShort, setIsShort] = useState(true)
     const [textComment, setTextComment] = useState("");
-
+    const [userId, setUserId] = useState("")
+    const [parentId, setParentId] = useState(0);
+    const [newComment, setNewComment] = useState(false)
 
     useEffect(() => {
-        // async function getComByPostId() {
-        //     const res = await getCommentByPostId(props.id);
-        //     setComment(res)
-        //     for (let i = 0; i < res?.length; i++) {
-        //         countReply.push(false)
-        //     }
-        // }
-        // getComByPostId()
+        getProfile().then(res => {
+            setUserId(res.data.id)
+
+        }
+        ).catch(
+        )
         getCommentByPostId(props.id).then(
             res => {
                 setComment(res.data)
@@ -37,15 +38,16 @@ const Comment = (props) => {
             }
         )
 
-    }, [])
+    }, [newComment])
 
     function handleOpenSetting(id, comment) {
         props.handleOpenSetting(id, comment)
 
     }
 
-    const handleOpenComment = async (i) => {
-        console.log(i)
+    const handleOpenComment = async (i, id) => {
+        console.log(id);
+        setParentId(id)
         const newList = []
         await countReply.map((item, index) => {
             if (index == i) {
@@ -94,7 +96,7 @@ const Comment = (props) => {
 
                     </View>
                     <TouchableOpacity
-                        onPress={() => handleOpenComment(index)}>
+                        onPress={() => handleOpenComment(index, item.id)}>
                         <Text className="ml-14 text-gray-400">Phản hồi</Text>
                     </TouchableOpacity>
 
@@ -138,7 +140,7 @@ const Comment = (props) => {
                                         </View>
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => handleOpenComment(index)}>
+                                        onPress={() => handleOpenComment(index, item.id)}>
                                         <Text className="ml-14 text-gray-400">Phản hồi</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -152,10 +154,11 @@ const Comment = (props) => {
                             <TextInput
                                 className=" py-4 mr-2 flex-1 text-gray-700"
                                 onChangeText={text => setTextComment(text)}
+                                value={textComment}
                                 placeholder='Nhập bình luận' />
 
                             <TouchableOpacity
-                                onPress={() => console.log(textComment)}
+                                onPress={() => handleSubmitComment()}
                             >
                                 <PaperAirplaneIcon color="rgb(250 204 21)" />
                             </TouchableOpacity>
@@ -203,7 +206,7 @@ const Comment = (props) => {
 
                         </View>
                         <TouchableOpacity
-                            onPress={() => handleOpenComment(index)}>
+                            onPress={() => handleOpenComment(index, item?.id)}>
                             <Text className="ml-14 text-gray-400">Phản hồi</Text>
                         </TouchableOpacity>
 
@@ -249,7 +252,7 @@ const Comment = (props) => {
                                                 </View>
                                             </View>
                                             <TouchableOpacity
-                                                onPress={() => handleOpenComment(item.index)}>
+                                                onPress={() => handleOpenComment(index, item.id)}>
                                                 <Text className="ml-14 text-gray-400">Phản hồi</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -266,11 +269,12 @@ const Comment = (props) => {
                         <View className="ml-10 flex-row items-center px-4   mb-3 bg-gray-100 justify-between rounded-2xl">
                             <TextInput
                                 className=" py-4 mr-2 flex-1 text-gray-700"
+                                value={textComment}
                                 onChangeText={text => setTextComment(text)}
                                 placeholder='Nhập bình luận' />
 
                             <TouchableOpacity
-                                onPress={() => console.log(textComment)}
+                                onPress={() => handleSubmitComment()}
                             >
                                 <PaperAirplaneIcon color="rgb(250 204 21)" />
                             </TouchableOpacity>
@@ -282,7 +286,25 @@ const Comment = (props) => {
     })
 
 
+    const handleSubmitComment = () => {
+        const body = {
+            "userId": userId,
+            "postId": props.id,
+            "comment": textComment,
+            "parentId": parentId
+        }
+        console.log(body);
+        setTextComment("")
+        postComment(body).then(res => {
+            setNewComment(!newComment)
 
+        }).catch(err => {
+            setTextComment("")
+            alert("Đăng tải bình luận không thành công")
+        })
+
+
+    }
 
     return (
 
@@ -291,10 +313,11 @@ const Comment = (props) => {
                 <View className="flex-row items-center px-4   mb-3 bg-gray-100 justify-between rounded-2xl">
                     <TextInput
                         className=" py-4 mr-2 flex-1 text-gray-700"
-                        onChangeText={text => setTextComment(text)}
+                        value={textComment}
+                        onChangeText={text => { setTextComment(text), setParentId(0) }}
                         placeholder='Nhập bình luận' />
                     <TouchableOpacity
-                        onPress={() => console.log(textComment)}
+                        onPress={() => handleSubmitComment()}
                     >
                         <PaperAirplaneIcon color="rgb(250 204 21)" />
                     </TouchableOpacity>

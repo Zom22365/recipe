@@ -10,7 +10,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native'
 import * as SecureStore from 'expo-secure-store';
 import SelectDropdown from 'react-native-select-dropdown'
-import { getProfile } from '../api/apiAcount'
+import { getProfile, upDateProfile } from '../api/apiAcount'
 import { FlatList } from 'react-native'
 import { Button } from 'react-native'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
@@ -123,6 +123,18 @@ const EditProfile = () => {
     }
 
     const handleSubmit = () => {
+        const body = {
+            "username": profile.username,
+            "name": profile.name,
+            "email": profile.email,
+            "phonenumber": profile.phonenumber,
+            "address": profile.address,
+            "dob": profile.dob,
+            "sex": profile.sex,
+            "avatar": profile.avatar
+        }
+        upDateProfile(body).then(res => alert("Cập nhập thành công"))
+            .catch(err => alert("Cập nhập không thành công"))
         console.log(profile);
     }
 
