@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -20,12 +20,19 @@ import NotiComponent from '../screens/NotiComponent';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getProfile } from '../api/apiAcount';
-
+import messaing from '@react-native-firebase/messaging'
 const Stack = createNativeStackNavigator();
-
 
 export default function AppNavigation(props) {
 
+    messaing().getToken().then(token=>{
+        console.log(token)
+    }).catch(e=>{
+        console.log(e)
+    })
+    messaing().onMessage(async remoteMessage => {
+        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      });
 
     return (
         <NavigationContainer>
