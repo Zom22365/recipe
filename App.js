@@ -6,12 +6,12 @@ import { getProfile } from './api/apiAcount';
 import messaing from "@react-native-firebase/messaging"
 import { Alert } from 'react-native';
 export default function App() {
-  const tokenDevice =  async ()=>{
-   return await messaing().getToken()
+  const tokenDevice = async () => {
+    return await messaing().getToken()
   }
   console.log(tokenDevice)
   messaing().onMessage(async remoteMessage => {
-    Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    Alert.alert('Bạn có một thông báo mới!', JSON.stringify(remoteMessage));
   });
   return (
     <AppNavigation />

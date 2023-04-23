@@ -101,7 +101,7 @@ const Comment = (props) => {
                 </View>
                 <View>
                     {
-                        item?.children?.map((rep, index) => {
+                        item?.children?.map((rep) => {
                             return (
                                 <View className="ml-10  mb-4 " key={rep.id}>
                                     <View
@@ -138,7 +138,7 @@ const Comment = (props) => {
                                         </View>
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => handleOpenComment(item.index)}>
+                                        onPress={() => handleOpenComment(index)}>
                                         <Text className="ml-14 text-gray-400">Phản hồi</Text>
                                     </TouchableOpacity>
                                 </View>

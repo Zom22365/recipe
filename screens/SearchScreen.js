@@ -23,8 +23,15 @@ const SearchScreen = () => {
 
     useEffect(() => {
 
-        const resTrending = getRecipeTrending();
-        setTrending(resTrending)
+
+        getRecipeTrending().then(
+            res => {
+                const data = res.data
+                setTrending(data)
+            }
+        ).catch(err => {
+            console.log("failed");
+        })
 
     }, [])
 
@@ -34,7 +41,7 @@ const SearchScreen = () => {
         if (keyword !== "") {
             setKeySearch(keyword)
             getRecipeByKeyWord()
-            const searchresult = trending.filter((i, index) => i?.name.includes(keyword))
+            const searchresult = trending.filter((i, index) => i?.content?.includes(keyword))
             // console.log(searchresult)
             const result = searchresult.map((item, index) => {
                 return (

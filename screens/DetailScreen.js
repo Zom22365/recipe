@@ -22,7 +22,7 @@ const DetailScreen = () => {
     const [editComment, setEditComment] = useState({})
     const [openEdit, setOpenEdit] = useState(false)
     const [status, setStatus] = useState(false)
-    const [thumnail, setThumnail] = useState(require('../assets/images/food_11.png'))
+    const [thumnail, setThumnail] = useState(require('../assets/images/user_default.png'))
 
     const router = useRoute()
     const navigation = useNavigation();
@@ -87,7 +87,8 @@ const DetailScreen = () => {
             if (res?.user?.avatar) {
                 setAvatar(res.user.avatar)
             }
-            // setStatus(res.status)
+            console.log(data.post.img);
+            setThumnail({ uri: `${data.post.img}` })
         }
         ).catch(err => {
             console.log("failed");
@@ -95,7 +96,6 @@ const DetailScreen = () => {
 
 
     }, [])
-
 
 
     return (
@@ -151,7 +151,9 @@ const DetailScreen = () => {
                     </View>
                     <Text className="mx-3 text-base my-3">{detailPost?.post?.description}</Text>
                     <View className="mx-3 mb-3">
-                        <Image style={{ width: '100%' }} source={detailPost?.post?.img} />
+                        {detailPost?.post?.img &&
+                            <Image className="flex-1" style={{ height: 250, width: '100%' }} source={{ uri: `${detailPost.post.img}` }} />
+                        }
                     </View>
                     <Text className="mx-3 mb-3 text-gray-400">Thời gian thực hiện: {detailPost?.post?.timeCooking}</Text>
                     <View>
@@ -173,8 +175,8 @@ const DetailScreen = () => {
                         }
 
                         <Text className="mx-3 mb-2 font-semibold text-xl">Nguyên liệu phụ</Text>
-                        {detailPost?.post?.branchFood &&
-                            detailPost?.post?.branchFood.map((item, index) => {
+                        {detailPost?.post?.subFood &&
+                            detailPost?.post?.subFood.map((item, index) => {
                                 return (
                                     <View key={index} className="mx-3 mb-2 flex-row items-center">
                                         <View className="w-4 h-4 rounded-full" style={style.circle}>
@@ -193,8 +195,8 @@ const DetailScreen = () => {
                     </View>
                     <View style={style.bottomPost} className='my-3 pb-3 mx-3'>
                         <Text className="mb-3 font-semibold text-2xl">Hướng dẫn nấu</Text>
-                        {detailPost?.post?.guide &&
-                            detailPost?.post?.guide.map((step, index) => {
+                        {detailPost?.post?.guideCooking &&
+                            detailPost?.post?.guideCooking.map((step, index) => {
                                 return (
                                     <View key={index} className="flex-row  mb-2">
                                         <View

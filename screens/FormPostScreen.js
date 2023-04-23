@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 import { ScrollView } from 'react-native'
@@ -13,6 +13,8 @@ import { Image } from 'react-native'
 import SelectDropdown from 'react-native-select-dropdown'
 import { StyleSheet } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native'
+import { postFoodNew } from '../api/apiRecipe'
+import { getCategories } from '../api/apiCategory'
 
 const FormPostScreen = () => {
     const [image, setImage] = useState(null);
@@ -29,8 +31,26 @@ const FormPostScreen = () => {
     const [guideFood, setGuideFood] = useState([])
     const [guide, setGuide] = useState("")
 
+    const [isLoanding, setLoanding] = useState(false);
+    const [categories, setCategoies] = useState([])
+    const [category, setCategory] = useState([])
 
-    const category = ['Bánh ngọt', 'Kẹo', 'Bánh ngọt', 'Kẹo', 'Bánh ngọt', 'Kẹo']
+    useEffect(() => {
+        getCategories().then(
+            res => {
+                console.log(res.data);
+                setCategoies(res.data);
+                let cate = []
+                res?.data?.map((item) => {
+                    cate.push(item.name)
+                })
+                setCategory(cate)
+            }
+        )
+
+    }, [])
+
+
 
     async function getToken() {
         accessToken = await SecureStore.getItemAsync('accessToken')
@@ -49,38 +69,38 @@ const FormPostScreen = () => {
         });
 
 
-        // if (!result.canceled) {
-        //     setImage(result.assets[0].uri);
-        //     handleSubmit(result.assets[0].uri)
-
-        // }
         if (!result.canceled) {
             setImage(result.assets[0].uri);
-            setPost({ ...post, img: result.assets[0].uri })
+            handleSubmit(result.assets[0].uri)
+
         }
+        // if (!result.canceled) {
+        //     setImage(result.assets[0].uri);
+        //     setPost({ ...post, img: result.assets[0].uri })
+        // }
     };
 
-    // const handleSubmit = async (uri) => {
-    //     if (uri != null) {
-    //         let filename = image.split('/').pop();
-    //         let match = /\.(\w+)$/.exec(filename);
-    //         let type = match ? `image/${match[1]}` : `image`;
-    //         const data = new FormData();
-    //         data.append('file', { uri: image, name: filename, type });
-    //         const token = await getToken()
-    //         setLoanding(true)
-    //         await upLoadAvatar(data, token).then(res => {
-    //             setLoanding(false)
-    //             alert("Cập nhật ảnh thành công.")
-    //         }).catch(err => {
-    //             setLoanding(false)
-    //             alert("Cập nhật ảnh không thành công.")
-    //         })
+    const handleSubmit = async (uri) => {
+        if (uri != null) {
+            let filename = image.split('/').pop();
+            let match = /\.(\w+)$/.exec(filename);
+            let type = match ? `image/${match[1]}` : `image`;
+            const data = new FormData();
+            data.append('file', { uri: image, name: filename, type });
+            const token = await getToken()
+            setLoanding(true)
+            await upLoadAvatar(data, token).then(res => {
+                setLoanding(false)
+                alert("Cập nhật ảnh thành công.")
+            }).catch(err => {
+                setLoanding(false)
+                alert("Cập nhật ảnh không thành công.")
+            })
 
-    //     } else {
-    //         alert('Please Select File first');
-    //     }
-    // }
+        } else {
+            alert('Please Select File first');
+        }
+    }
 
     const handleAddMainFood = () => {
         console.log(main)
@@ -150,8 +170,17 @@ const FormPostScreen = () => {
     }
 
     const handleSubmitPost = () => {
-        setPost({ ...post, mainFood: mainFood, subFood: branchFood, guideCooking: guideFood })
-        console.log({ ...post, mainFood: mainFood, subFood: branchFood, guideFood: guideFood });
+        const body = {
+            categoryId: post.categoryId,
+            content: post.content,
+            img: "https://res.cloudinary.com/daytz84nx/image/upload/v1682288676/bgijsxvyopx0dls26xgu.png",
+            timeCooking: post.timeCooking,
+            description: post.description,
+            mainFood: mainFood,
+            subFood: branchFood,
+            guideCooking: guideFood
+        }
+        postFoodNew(body).then(res => console.log("Thành công")).catch(err => console.log(false))
 
     }
 
@@ -179,6 +208,16 @@ const FormPostScreen = () => {
     return (
 
         <SafeAreaView className="flex-1 bg-white" >
+            {
+                isLoanding &&
+                <View
+                    className="flex-1 bg-[#ffffffa1] justify-center"
+                    style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 100 }}>
+                    <ActivityIndicator size="large" color='hsl(210,95%,69%)'
+                    />
+                </View>
+            }
+
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 keyboardVerticalOffset={20}
@@ -243,7 +282,9 @@ const FormPostScreen = () => {
                             <SelectDropdown
                                 data={category}
                                 onSelect={(selectedItem, index) => {
-                                    setPost({ ...post, category: selectedItem })
+                                    setPost({ ...post, categoryId: categories[index].id }),
+                                        console.log(categories[index].id);
+
                                 }}
                                 buttonStyle={styles.dropdown1BtnStyle}
                                 buttonTextStyle={styles.dropdown1BtnTxtStyle}

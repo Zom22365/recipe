@@ -74,9 +74,7 @@ const ProfileScreen = () => {
                 }
                 getProfile(config).then(res => {
                     setProfile(res.data)
-                    console.log("avatar", res.data);
                     if (res.data.avatar) {
-
                         setAvatar({ uri: res.data.avatar })
                     }
                 }
@@ -134,20 +132,20 @@ const ProfileScreen = () => {
 
                     <View className="pt-10">
                         <View className='flex-row justify-between flex-wrap'>
-                            {active == 'post' &&
+                            {/* {active == 'post' &&
                                 data.map((item, index) => {
                                     return (
                                         <CardFoodComponent key={index} />
                                     )
                                 })
-                            }
-                            {active == 'provite' &&
+                            } */}
+                            {/* {active == 'provite' &&
                                 data1.map((item, index) => {
                                     return (
                                         <CardFoodComponent key={index} />
                                     )
                                 })
-                            }
+                            } */}
 
                         </View>
                     </View>

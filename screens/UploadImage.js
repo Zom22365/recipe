@@ -31,7 +31,7 @@ const UploadImage = () => {
             allowsEditing: true,
             aspect: [4, 3],
         });
-
+        console.log(result);
         if (!result.canceled) {
             setImage(result.assets[0].uri);
             setIsSelect(true)

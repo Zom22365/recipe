@@ -18,13 +18,15 @@ const HomeScreen = () => {
     const [trendingByLike, setTrendingByLike] = useState([])
 
     useEffect(() => {
-        const res = getCategories();
-        setCategoies(res);
+        getCategories().then(
+            res => {
+                setCategoies(res.data);
+            }
+        )
 
         getRecipeTrending().then(
             res => {
                 const data = res.data
-                console.log(data);
                 setTrending(data)
             }
         ).catch(err => {
