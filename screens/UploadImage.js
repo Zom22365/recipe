@@ -53,32 +53,6 @@ const UploadImage = () => {
 
     const handleSubmit = async () => {
         if (image != null) {
-            // let filename = image.split('/').pop();
-            // let match = /\.(\w+)$/.exec(filename);
-            // let type = match ? `image/${match[1]}` : `image`;
-            // const data = new FormData();
-            // data.append('file', { uri: image, name: filename, type });
-            // const token = await getToken()
-            // setLoanding(true)
-            // fetch(
-            //     API_URL + POST_CLOUDING_UPLOAD_AVATAR,
-            //     {
-            //         method: 'post',
-            //         body: data,
-            //         headers: {
-            //             'Content-Type': 'multipart/form-data; ',
-            //             'Authorization': `Bearer ${token}`
-            //         },
-            //     }
-            // )
-            //     .then(res => {
-            //         // cần fix
-            //         setLoanding(false)
-            //         alert("Cập nhật ảnh thành công.")
-            //         // console.log(res);
-            //     })
-
-
             let filename = image.split('/').pop();
             let match = /\.(\w+)$/.exec(filename);
             let type = match ? `image/${match[1]}` : `image`;

@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
       [
         "expo-image-picker",
@@ -31,14 +33,17 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.maiductrung21.recipe"
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.foodreview.recipe"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "81845465-51e7-4dc5-a13a-f2e0a6ddcfe0"
+        "projectId": "2b2bcdf9-00ce-40a4-8d2d-1648b655dbb7"
       }
     }
   }
