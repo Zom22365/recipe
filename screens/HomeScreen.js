@@ -10,18 +10,37 @@ import CardFoodComponent from '../components/CardFoodComponent';
 import FooterComponent from '../components/FooterComponent';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getCategories } from '../api/apiCategory';
-import { getRecipeTrending } from '../api/apiTrending';
+import { getRecipeTrending, getRecipeTrendingByLike } from '../api/apiTrending';
 
 const HomeScreen = () => {
     const [categories, setCategoies] = useState([])
     const [trending, setTrending] = useState([])
+    const [trendingByLike, setTrendingByLike] = useState([])
 
     useEffect(() => {
         const res = getCategories();
         setCategoies(res);
 
-        const resTrending = getRecipeTrending();
-        setTrending(resTrending)
+        getRecipeTrending().then(
+            res => {
+                const data = res.data
+                console.log(data);
+                setTrending(data)
+            }
+        ).catch(err => {
+            console.log("failed");
+        })
+
+
+        getRecipeTrendingByLike().then(
+            res => {
+                const data = res.data
+                console.log(data);
+                setTrendingByLike(data)
+            }
+        ).catch(err => {
+            console.log("failed");
+        })
 
     }, [])
 
@@ -35,7 +54,7 @@ const HomeScreen = () => {
 
                 <View style={{ height: 418 }}>
                     <Swiper autoplay={false} >
-                        {trending.map((item, index) => {
+                        {trendingByLike.map((item, index) => {
                             if (index < 3) {
                                 return (<BannerComponent key={index} {...item} />)
                             }

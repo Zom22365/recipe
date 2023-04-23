@@ -32,22 +32,55 @@ const FormPostScreen = () => {
 
     const category = ['Bánh ngọt', 'Kẹo', 'Bánh ngọt', 'Kẹo', 'Bánh ngọt', 'Kẹo']
 
+    async function getToken() {
+        accessToken = await SecureStore.getItemAsync('accessToken')
+        if (accessToken) {
+            setToken(accessToken)
+            return accessToken
+        }
+
+    }
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
 
-        console.log("RESULT ANDROID")
-        console.log(result.assets[0])
 
+        // if (!result.canceled) {
+        //     setImage(result.assets[0].uri);
+        //     handleSubmit(result.assets[0].uri)
+
+        // }
         if (!result.canceled) {
             setImage(result.assets[0].uri);
             setPost({ ...post, img: result.assets[0].uri })
         }
     };
+
+    // const handleSubmit = async (uri) => {
+    //     if (uri != null) {
+    //         let filename = image.split('/').pop();
+    //         let match = /\.(\w+)$/.exec(filename);
+    //         let type = match ? `image/${match[1]}` : `image`;
+    //         const data = new FormData();
+    //         data.append('file', { uri: image, name: filename, type });
+    //         const token = await getToken()
+    //         setLoanding(true)
+    //         await upLoadAvatar(data, token).then(res => {
+    //             setLoanding(false)
+    //             alert("Cập nhật ảnh thành công.")
+    //         }).catch(err => {
+    //             setLoanding(false)
+    //             alert("Cập nhật ảnh không thành công.")
+    //         })
+
+    //     } else {
+    //         alert('Please Select File first');
+    //     }
+    // }
 
     const handleAddMainFood = () => {
         console.log(main)
@@ -117,8 +150,8 @@ const FormPostScreen = () => {
     }
 
     const handleSubmitPost = () => {
-        setPost({ ...post, mainFood: mainFood, branchFood: branchFood })
-        console.log({ ...post, mainFood: mainFood, branchFood: branchFood, guideFood: guideFood });
+        setPost({ ...post, mainFood: mainFood, subFood: branchFood, guideCooking: guideFood })
+        console.log({ ...post, mainFood: mainFood, subFood: branchFood, guideFood: guideFood });
 
     }
 
@@ -165,11 +198,12 @@ const FormPostScreen = () => {
                             <TextInput
                                 placeholder='Tên món ăn...'
                                 className="py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl "
-                                onChangeText={text => setPost({ ...post, name: text })}
+                                onChangeText={text => setPost({ ...post, content: text })}
 
                             />
 
                         </View>
+                        {/* thieu */}
                         <View className="mb-5" >
                             <Text className="flex">Ảnh món ăn:
 
@@ -183,11 +217,12 @@ const FormPostScreen = () => {
                             {image && <Image className="mt-5 mx-auto" source={{ uri: image }} style={{ width: 200, height: 200 }} />}
 
                         </View>
+
                         <View className="mb-5">
                             <Text className="mb-3">Thời gian thực hiện:</Text>
                             <TextInput placeholder='...giờ...phút'
                                 className="py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl"
-                                onChangeText={text => setPost({ ...post, time: text })}
+                                onChangeText={text => setPost({ ...post, timeCooking: text })}
 
                             />
                         </View>
@@ -198,10 +233,11 @@ const FormPostScreen = () => {
                                 numberOfLines={10}
                                 style={{ height: 200, textAlignVertical: 'top', }}
                                 className="py-4 px-4 bg-gray-100 text-gray-700 rounded-2xl"
-                                onChangeText={text => setPost({ ...post, decr: text })}
+                                onChangeText={text => setPost({ ...post, description: text })}
 
                             />
                         </View>
+                        {/* thieu */}
                         <View className="mb-5">
                             <Text className="mb-3">Danh mục:</Text>
                             <SelectDropdown

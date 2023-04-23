@@ -45,16 +45,16 @@ const ChangePassword = () => {
         } else {
             setLoanding(true)
             const body = {
-                "oldPassword": account.passwordold,
-                "newPasswrod": account.passwordnew
+                oldPassword: account.passwordold,
+                newPasswrod: account.passwordnew
             }
             const accessToken = await getToken();
+            console.log(body);
             await changePassword(body, accessToken).then(res => {
                 setLoanding(false);
                 alert('Đổi mật khẩu thành công.')
 
             }).catch(err => {
-                console.log(accessToken);
                 setLoanding(false);
                 alert('Đổi mật khẩu không thành công.')
 

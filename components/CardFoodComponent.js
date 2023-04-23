@@ -48,13 +48,13 @@ const CardFoodComponent = (props) => {
                         className='px-1 pt-2'
                         style={{ color: '#E42C2C', fontWeight: '500' }}
                     >
-                        {props.time}
+                        {props.timeCooking}
                     </Text>
                     <Text
                         className='px-1 pb-1 text-lg'
                         style={{ fontWeight: '700' }}
                     >
-                        {props.name}
+                        {props.content}
                     </Text>
                 </View>
                 <View className='px-1 pb-2 flex-row'>

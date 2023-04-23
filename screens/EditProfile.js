@@ -81,6 +81,7 @@ const EditProfile = () => {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
                 getProfile(config).then(res => {
+                    console.log(res.data);
                     setProfile(res.data)
                     if (res.data.avatar) {
                         setDataAvatar([

@@ -8,29 +8,34 @@ import { getProfile } from '../api/apiAcount';
 
 const WelcomeScreen = () => {
     const navigation = useNavigation();
+    const [initialRouteName, setInitialRouteName] = useState("Welcome")
     const isFirst = AsyncStorage.getItem('notFirst') || true;
-
     useEffect(() => {
-        // let token = ''
-        // async function getToken() {
-        //     token = await SecureStore.getItemAsync('accessToken') || ""
-        //     if (token && isFirst !== true) {
-        //         const config = {
-        //             headers: { 'Authorization': `Bearer ${token}` }
-        //         }
-        //         getProfile(config).then(res =>
-        //             navigation.navigate('Home')).catch(
-        //         )
-        //     } else if (token === "" && isFirst !== true) {
-        //         navigation.navigate('Login')
-        //     }
+        let token = ''
+        async function getToken() {
+            console.log("here");
+            token = await SecureStore.getItemAsync('accessToken') || ""
+            if (token && isFirst !== true) {
+                console.log("here1");
 
-        // }
+                const config = {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+                getProfile(config).then(res =>
+                    navigation.navigate("Home")
+                ).catch(
+                )
+            } else if (token === "" && isFirst !== true) {
+                console.log("here2");
+                navigation.navigate("Login")
+            }
 
-        // getToken()
-        navigation.navigate('Home')
+        }
+
+        getToken()
 
     }, [])
+
     const handleLogin = async () => {
         await AsyncStorage.setItem('notFirst', 'false')
         navigation.navigate('Login')

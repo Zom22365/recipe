@@ -17,8 +17,8 @@ const BannerComponent = (props) => {
                     <Image className="flex-1 rounded-md" style={{ height: 250 }} source={props?.img} />
                 </View>
                 <Text className="font-bold text-2xl text-black mx-8 my-5"
-                >{props?.name}</Text>
-                <Text className="mx-8 pb-5 overflow-hidden" style={{ height: 80 }}>{props?.decr}</Text>
+                >{props?.content}</Text>
+                <Text className="mx-8 pb-5 overflow-hidden" style={{ height: 80 }}>{props?.description}</Text>
             </View>
         </TouchableWithoutFeedback>
     )

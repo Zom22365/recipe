@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid'
 import { themeColors } from '../theme'
+import { forgotPassword } from '../api/apiMail';
 
 
 const ForgotPasswordScreen = () => {
@@ -19,7 +20,9 @@ const ForgotPasswordScreen = () => {
     const handleSubmit = () => {
         if (account.email === "") {
             Alert.alert("Nhập địa chỉ email.")
-
+        } else {
+            forgotPassword(account.email).then(res =>
+                alert("kiểm tra mail")).catch(err => alert("Hãy thử lại."))
         }
 
     }

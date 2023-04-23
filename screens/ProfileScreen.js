@@ -74,7 +74,11 @@ const ProfileScreen = () => {
                 }
                 getProfile(config).then(res => {
                     setProfile(res.data)
-                    setAvatar({ uri: res.data.avatar })
+                    console.log("avatar", res.data);
+                    if (res.data.avatar) {
+
+                        setAvatar({ uri: res.data.avatar })
+                    }
                 }
                 ).catch(
                 )

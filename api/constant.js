@@ -1,6 +1,6 @@
 import Config from "react-native-config";
 
-export const API_URL = "https://appello.serveo.net"
+export const API_URL = "https://sepelio.serveo.net"
 
 
 export const GET_ACCOUNT_PROFILE = "/account/profile"
@@ -21,11 +21,12 @@ export const PUT_CLOUDING_UPDATE_AVATAR = "/clouding/update/avatar"
 export const GET_CATEGORIES = "/"
 export const GET_CATEGORIES_BY_ID = "/"
 
-export const GET_RECIPE_BY_ID = "/"
+export const GET_RECIPE_BY_ID = "/post/getFood"
 
-export const GET_COMMENT_BY_POST_ID = "/"
+export const GET_COMMENT_BY_POST_ID = "/comment/"
 export const GET_COMMENT_BY_ID = "/"
 
-export const GET_RECIPE_TRENDING = "/"
+export const GET_RECIPE_TRENDING = "/trending/topViewFood"
+export const GET_RECIPE_TRENDING_BY_LIKE = "/trending/topLikeFood"
 
 export const GET_RECIPE_BY_KEYWORD = "/"

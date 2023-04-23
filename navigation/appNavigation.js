@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
-import React from 'react'
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react'
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
@@ -17,14 +17,19 @@ import DetailScreen from '../screens/DetailScreen';
 import Comment from '../screens/Comment';
 import FormPostScreen from '../screens/FormPostScreen';
 import NotiComponent from '../screens/NotiComponent';
+import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getProfile } from '../api/apiAcount';
 
 const Stack = createNativeStackNavigator();
 
 
-export default function AppNavigation() {
+export default function AppNavigation(props) {
+
+
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Welcome' >
+            <Stack.Navigator initialRouteName="Welcome" >
                 <Stack.Screen name="Home" options={{ headerShown: false, gestureEnabled: false }} component={HomeScreen} />
                 <Stack.Screen name="Welcome" options={{ headerShown: false }} component={WelcomeScreen} />
                 <Stack.Screen name="Login" options={{ headerShown: false, gestureEnabled: false }} component={LoginScreen} />
