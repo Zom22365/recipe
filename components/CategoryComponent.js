@@ -13,7 +13,7 @@ const CategoryComponent = (props) => {
         >
             <View className="my-2 mx-2" style={{ width: 110, alignItems: 'center' }}>
                 <View >
-                    <Image style={{ borderRadius: 100, width: 100, height: 100 }} source={props.category.img} />
+                    <Image style={{ borderRadius: 100, width: 100, height: 100 }} source={props?.category?.img} />
                 </View>
                 <Text className="text-center py-1 font-bold">{props.category.name}</Text>
             </View>

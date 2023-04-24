@@ -11,21 +11,26 @@ import { ScrollView } from 'react-native'
 import FooterComponent from '../components/FooterComponent'
 import CardFoodComponent from '../components/CardFoodComponent'
 import { getCategoryById } from '../api/apiCategory'
+import { getRecipeis } from '../api/apiRecipe'
 
 const CategoryScreen = ({ }) => {
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     const [recipes, setRecipes] = useState({})
+    const [nameCate, setNameCate] = useState("")
     const router = useRoute()
     const navigation = useNavigation();
 
     const { id } = router.params
 
     useEffect(() => {
-        async function getCateById() {
-            const res = await getCategoryById(id);
-            setRecipes(res)
-        }
-        getCateById()
+        getCategoryById(id).then(res => {
+            setNameCate(res?.data?.name)
+        })
+
+        getRecipeis(id).then(res => {
+            console.log(res?.data);
+            setRecipes({ ...recipes, listRecipe: res?.data })
+        })
 
     }, [])
     return (
@@ -38,7 +43,7 @@ const CategoryScreen = ({ }) => {
                     showsVerticalScrollIndicator={false}>
 
                     <View className="mx-3">
-                        <Text className="font-bold text-xl mb-3">Danh mục: {recipes.nameCategory}</Text>
+                        <Text className="font-bold text-xl mb-3">Danh mục: {nameCate}</Text>
                         <View className='flex-row justify-between flex-wrap'>
                             {
                                 recipes.listRecipe &&

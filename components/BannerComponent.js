@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const BannerComponent = (props) => {
     const navigation = useNavigation()
+
     return (
 
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Detail', {
@@ -14,7 +15,7 @@ const BannerComponent = (props) => {
         })}>
             <View className="rounded-md mx-3" style={{ backgroundColor: themeColors.bg }}>
                 <View className="flex-row">
-                    <Image className="flex-1 rounded-md" style={{ height: 250 }} source={props?.img} />
+                    <Image className="flex-1 rounded-md" style={{ height: 250 }} source={{ uri: `${props?.img}` }} />
                 </View>
                 <Text className="font-bold text-2xl text-black mx-8 my-5"
                 >{props?.content}</Text>

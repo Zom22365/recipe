@@ -1,7 +1,7 @@
 import { View, TouchableOpacity, Image, Text } from 'react-native'
 import React, { useState } from 'react'
-import { MagnifyingGlassIcon, BellIcon, HomeIcon, UserCircleIcon, PlusCircleIcon } from 'react-native-heroicons/solid';
-import { BellIcon as Bell, UserCircleIcon as User, PlusCircleIcon as Plus, HomeIcon as Home } from 'react-native-heroicons/outline';
+import { HeartIcon, MagnifyingGlassIcon, BellIcon, HomeIcon, UserCircleIcon, PlusCircleIcon } from 'react-native-heroicons/solid';
+import { HeartIcon as Heart, BellIcon as Bell, UserCircleIcon as User, PlusCircleIcon as Plus, HomeIcon as Home } from 'react-native-heroicons/outline';
 import { FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
@@ -40,8 +40,8 @@ const FooterComponent = () => {
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => navigation.navigate('Bell')}>
-                {activeScreen === "Bell" ? <BellIcon size="28" color="black" /> :
-                    <Bell size="28" color="gray" />
+                {activeScreen === "Bell" ? <HeartIcon size="28" color="black" /> :
+                    <Heart size="28" color="gray" />
                 }
             </TouchableOpacity>
             <TouchableOpacity

@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 // import { value } from 'deprecated-react-native-prop-types/DeprecatedTextInputPropTypes';
 import { Alert } from 'react-native';
 
-const ProfileScreen = () => {
+const ProfileOther = () => {
     const [active, setActive] = useState('post');
     const [openSetting, setOpenSetting] = useState(false)
     const [avatar, setAvatar] = useState(require('../assets/images/user_default.png'))
@@ -37,48 +37,9 @@ const ProfileScreen = () => {
     const [countPost, setCountPost] = useState(0)
     const navigation = useNavigation();
 
-    const handleSelect = (value) => {
-        if (value == "EditProfile") {
-            navigation.navigate("EditProfile")
-        } else if (value == "Logout") {
-            Alert.alert("Thông báo", "Bạn có muốn đăng xuất?", [
-                {
-                    text: 'Không',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                },
-                {
-                    text: 'Có',
-                    onPress: () => {
-                        SecureStore.deleteItemAsync('accessToken').then(
-                            navigation.navigate('Login')
-                        )
-                    }
-                },
-
-            ])
-        } else if (value === "ChangePassword") {
-            navigation.navigate("ChangePassword")
-
-        }
-        setOpenSetting(false)
-    }
 
     useEffect(() => {
-        getProfile().then(res => {
-            setProfile(res.data)
-            if (res.data.avatar) {
-                setAvatar({ uri: res.data.avatar })
-            }
-        })
 
-        getPostUser().then(res => {
-            console.log(res.data);
-            setPost(res.data)
-        }).catch(err => {
-            console.log(err)
-        }
-        )
 
     }, [])
 
@@ -106,12 +67,6 @@ const ProfileScreen = () => {
                             <Text style={style.title} >{profile.username}</Text>
                             <Text>{post.length} bài viết | 100 yêu thích</Text>
                         </View>
-                        <View>
-                            <TouchableOpacity
-                                onPress={() => setOpenSetting(true)}>
-                                <EllipsisHorizontalIcon size="24" color="black" />
-                            </TouchableOpacity>
-                        </View>
                     </View>
 
                     <View className='flex-row gap-5 justify-center'>
@@ -119,10 +74,7 @@ const ProfileScreen = () => {
                             onPress={() => setActive('post')}>
                             <Text style={`${active}` == 'post' ? style.menu : ""} className="pt-3">Bài viết</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => setActive('provite')}>
-                            <Text style={`${active}` == 'provite' ? style.menu : ""} className="pt-3">Yêu thích</Text>
-                        </TouchableOpacity>
+
                     </View>
 
                     <View className="pt-10">
@@ -134,13 +86,7 @@ const ProfileScreen = () => {
                                     )
                                 })
                             }
-                            {/* {active == 'provite' &&
-                                data1.map((item, index) => {
-                                    return (
-                                        <CardFoodComponent key={index} />
-                                    )
-                                })
-                            } */}
+
 
                         </View>
                     </View>
@@ -226,4 +172,4 @@ const style = StyleSheet.create({
 })
 
 
-export default ProfileScreen
+export default ProfileOther

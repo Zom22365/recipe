@@ -20,6 +20,8 @@ import NotiComponent from '../screens/NotiComponent';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getProfile } from '../api/apiAcount';
+import UpdatePost from '../screens/UpdatePost';
+import ProfileOther from '../screens/ProfileOther';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +46,8 @@ export default function AppNavigation(props) {
                 <Stack.Screen name="Detail" options={{ headerShown: false, gestureEnabled: true }} component={DetailScreen} />
                 <Stack.Screen name="Bell" options={{ headerShown: false, gestureEnabled: true }} component={NotiComponent} />
                 <Stack.Screen name="Add" options={{ headerShown: false, gestureEnabled: true }} component={FormPostScreen} />
+                <Stack.Screen name="UpdatePost" options={{ headerShown: false, gestureEnabled: true }} component={UpdatePost} />
+                <Stack.Screen name="ProfileOther" options={{ headerShown: false, gestureEnabled: false }} component={ProfileOther} />
 
             </Stack.Navigator>
         </NavigationContainer>

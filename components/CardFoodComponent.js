@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const CardFoodComponent = (props) => {
     const navigation = useNavigation();
-    const avatar = props?.chef?.img ? props?.chef?.img : require('../assets/images/user_default.png')
+    const avatar = props?.chef?.img ? { uri: `${props?.chef?.img}` } : require('../assets/images/user_default.png')
 
 
     return (
@@ -23,26 +23,7 @@ const CardFoodComponent = (props) => {
                         <Image
                             className="rounded-md"
                             style={{ width: "100%", height: 150 }}
-                            source={props.img} />
-                        {
-                            props.status === 1 ?
-                                <TouchableOpacity
-                                    className='bg-white rounded-full'
-                                    style={{ position: 'absolute', right: 8, top: 8, padding: 5 }} >
-
-                                    <BookMark size="20" color="black" />
-
-                                </TouchableOpacity>
-                                :
-                                <TouchableOpacity
-                                    className='bg-white rounded-full'
-                                    style={{ position: 'absolute', right: 8, top: 8, padding: 5 }} >
-
-                                    <BookmarkIcon size="20" color="black" />
-
-                                </TouchableOpacity>
-                        }
-
+                            source={{ uri: `${props?.img}` }} />
                     </View>
                     <Text
                         className='px-1 pt-2'

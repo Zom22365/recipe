@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, TextInput, TouchableWithoutFeedback, Keyboard, Alert, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, Image, TextInput, TouchableWithoutFeedback, Keyboard, Alert, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { themeColors } from '../theme'
 import { ArrowLeftIcon, CalendarDaysIcon } from 'react-native-heroicons/solid';
@@ -14,6 +14,7 @@ export default function SignUpScreen() {
     const navigation = useNavigation();
     const [openDate, setOpenDate] = useState(false);
     const [date, setDate] = useState(new Date());
+    const [isLoanding, setLoanding] = useState(false);
     const [account, setAccount] = useState({
         email: "",
         username: "",
@@ -57,10 +58,12 @@ export default function SignUpScreen() {
                 name: account.name,
                 sex: account.sex
             }
-            console.log(body)
+            setLoanding(true)
             register(body).then(res => {
+                setLoanding(false)
                 alert(`Đăng tài khoản ${res.data?.username} thành công`)
             }).catch(err => {
+                setLoanding(false)
                 alert("Đăng ký tài khoản không thành công")
             })
         }
@@ -84,6 +87,15 @@ export default function SignUpScreen() {
         <TouchableWithoutFeedback
             onPress={handleDismissKeyboard}>
             <View className="flex-1 bg-white" style={{ backgroundColor: themeColors.bg }}>
+                {
+                    isLoanding &&
+                    <View
+                        className="flex-1 bg-[#ffffffa1] justify-center"
+                        style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 100 }}>
+                        <ActivityIndicator size="large" color='hsl(210,95%,69%)'
+                        />
+                    </View>
+                }
                 <View className="flex">
                     <View className="flex-row justify-start  mt-12 mb-5">
                         <TouchableOpacity

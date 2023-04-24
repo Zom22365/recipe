@@ -13,13 +13,15 @@ import { Image } from 'react-native'
 import SelectDropdown from 'react-native-select-dropdown'
 import { StyleSheet } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native'
-import { postFoodNew, upLoadPostImg } from '../api/apiRecipe'
-import { getCategories } from '../api/apiCategory'
+import { getRecipeyById, postFoodNew, upLoadPostImg, updateFood } from '../api/apiRecipe'
+import { getCategories, getCategoryById } from '../api/apiCategory'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
-const FormPostScreen = () => {
+const UpdatePost = () => {
     const [image, setImage] = useState(null);
     const [post, setPost] = useState({})
     const [img, setImg] = useState(null);
+    const [cateCurrent, setCateCurrent] = useState("")
 
     const [inputMainFood, setInputMainFood] = useState(false)
     const [mainFood, setMainFood] = useState([])
@@ -38,19 +40,41 @@ const FormPostScreen = () => {
     const [category, setCategory] = useState([])
 
 
+    const router = useRoute()
 
+    const { id } = router.params
+    // console.log(id);
     useEffect(() => {
         getCategories().then(
             res => {
                 console.log(res.data);
                 setCategoies(res.data);
                 let cate = []
+
                 res?.data?.map((item) => {
                     cate.push(item.name)
                 })
                 setCategory(cate)
             }
         )
+
+        getRecipeyById(id).then(res => {
+            const data = res.data
+            console.log(data);
+            getCategoryById(data.post.categoryId).then(res => {
+                setCateCurrent(res?.data?.name)
+            })
+            setPost(data?.post)
+            setMainFood(data?.post?.mainFood)
+            setBranchFood(data?.post?.subFood)
+            setGuideFood(data?.post.guideCooking)
+            setImage(data.post.img)
+        }
+        ).catch(err => {
+            console.log("failed");
+        })
+
+
 
     }, [])
 
@@ -150,6 +174,7 @@ const FormPostScreen = () => {
                 const data = await response.json();
                 setImg(data?.data)
                 setLoanding(false)
+
                 // alert("Tải ảnh thành công.")
             } catch (error) {
                 setLoanding(false)
@@ -165,6 +190,7 @@ const FormPostScreen = () => {
     const handleSubmitPost = async () => {
 
         const body = {
+            id: id,
             categoryId: post.categoryId,
             content: post.content,
             img: img,
@@ -177,7 +203,7 @@ const FormPostScreen = () => {
         setLoanding(true)
         try {
             setLoanding(false)
-            await postFoodNew(body)
+            await updateFood(body)
             // const data = await res.data
             // console.log(data);
             setPost({})
@@ -185,10 +211,10 @@ const FormPostScreen = () => {
             setMainFood([])
             setBranchFood([])
             setGuide([])
-            alert("Đăng bài thành công")
+            alert("Cập nhật thành công")
         } catch {
             setLoanding(false)
-            alert("Đăng bài không thành công")
+            alert("Cập nhật không thành công")
         }
 
     }
@@ -302,7 +328,8 @@ const FormPostScreen = () => {
                                 buttonTextStyle={styles.dropdown1BtnTxtStyle}
                                 rowStyle={styles.dropdown1RowStyle}
                                 rowTextStyle={styles.dropdown1RowTxtStyle}
-                                defaultButtonText={'--Lựa chọn danh mục--'}
+                                // defaultValueByIndex={}
+                                defaultButtonText={cateCurrent}
                                 renderDropdownIcon={() => {
                                     return <ChevronDownIcon color="black" />
                                 }}
@@ -360,7 +387,7 @@ const FormPostScreen = () => {
                             onPress={handleSubmitPost}
                         >
                             <Text className="text-xl font-bold text-center text-gray-700">
-                                Đăng bài
+                                Cập nhật
                             </Text>
                         </TouchableOpacity>
 
@@ -509,4 +536,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default FormPostScreen
+export default UpdatePost

@@ -1,4 +1,4 @@
-import { View, Text, Keyboard, TextInput, ScrollView, StyleSheet, StatusBar, SafeAreaView } from 'react-native'
+import { View, Text, Keyboard, TextInput, ScrollView, StyleSheet, StatusBar, SafeAreaView, ActivityIndicator } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { KeyboardAvoidingView } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native'
@@ -10,7 +10,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native'
 import * as SecureStore from 'expo-secure-store';
 import SelectDropdown from 'react-native-select-dropdown'
-import { getProfile } from '../api/apiAcount'
+import { deleleAvatar, getProfile, upDateProfile } from '../api/apiAcount'
 import { FlatList } from 'react-native'
 import { Button } from 'react-native'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
@@ -18,19 +18,6 @@ import RNDateTimePicker from '@react-native-community/datetimepicker'
 
 
 const EditProfile = () => {
-
-    // const [fileResponse, setFileResponse] = useState([]);
-
-    // const handleDocumentSelection = useCallback(async () => {
-    //     try {
-    //         const response = await DocumentPicker.pick({
-    //             presentationStyle: 'fullScreen',
-    //         });
-    //         setFileResponse(response);
-    //     } catch (err) {
-    //         console.warn(err);
-    //     }
-    // }, []);
     const [profile, setProfile] = useState({
         "id": '',
         "username": '',
@@ -63,6 +50,9 @@ const EditProfile = () => {
     ])
     const [openDate, setOpenDate] = useState(false);
     const [isOpen, setIsOpen] = useState(false)
+    const [isLoanding, setLoanding] = useState(false);
+    const [load, setLoad] = useState(false)
+
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         if (Platform.OS === 'android') {
@@ -111,7 +101,7 @@ const EditProfile = () => {
         }
 
         getToken()
-    }, [])
+    }, [load])
 
     const handleDismissKeyboard = () => {
         Keyboard.dismiss()
@@ -122,8 +112,28 @@ const EditProfile = () => {
         return subDateStr[0];
     }
 
-    const handleSubmit = () => {
-        console.log(profile);
+    const handleSubmit = async () => {
+        const body = {
+            "username": profile.username,
+            "name": profile.name,
+            "email": profile.email,
+            "phonenumber": profile.phonenumber,
+            "address": profile.address,
+            "dob": profile.dob,
+            "sex": profile.sex,
+            "avatar": profile.avatar
+        }
+
+        setLoanding(true)
+        await upDateProfile(body).then(res => {
+            setLoanding(false)
+            alert("Cập nhập thành công")
+            setLoad(true)
+        })
+            .catch(err => {
+                setLoanding(false)
+                alert("Cập nhập không thành công")
+            })
     }
 
     const handleOpen = () => {
@@ -133,7 +143,25 @@ const EditProfile = () => {
         if (value === "UploadImage") {
             navigation.navigate("UploadImage")
         } else if (value === "RemoveCurrentImage") {
+            Alert.alert("Thông báo", "Bạn có muốn xóa ảnh hiện tại?", [
+                {
+                    text: 'Không',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Có',
+                    onPress: () => {
+                        deleleAvatar().then(res => {
+                            alert("Xóa ảnh thành công.")
+                        }).catch(
+                            alert("Xóa ảnh không thành công")
+                        )
 
+                    }
+                },
+
+            ])
         } else {
             navigation.navigate("EditProfile")
 
@@ -147,6 +175,15 @@ const EditProfile = () => {
             keyboardVerticalOffset={20}
             className="flex-1 bg-white"
         >
+            {
+                isLoanding &&
+                <View
+                    className="flex-1 bg-[#ffffffa1] justify-center"
+                    style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 100 }}>
+                    <ActivityIndicator size="large" color='hsl(210,95%,69%)'
+                    />
+                </View>
+            }
             <TouchableWithoutFeedback
                 onPress={handleDismissKeyboard}
             >

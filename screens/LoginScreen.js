@@ -31,7 +31,7 @@ const LoginScreen = () => {
             Alert.alert("Nhập mật khẩu.")
         } else {
             setLoanding(true)
-            console.log(account)
+            // console.log(account)
             await login(account)
                 .then(res => {
                     setLoanding(false);
@@ -42,7 +42,7 @@ const LoginScreen = () => {
                     alert('Đăng nhập không thành công.')
                 })
         }
-
+        // navigation.navigate("Home")
     }
 
 

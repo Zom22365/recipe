@@ -4,12 +4,12 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { ArrowLeftIcon, BookmarkIcon } from 'react-native-heroicons/outline';
-import { BookmarkIcon as BookMark } from 'react-native-heroicons/solid';
+import { BookmarkIcon as BookMark, EllipsisHorizontalIcon } from 'react-native-heroicons/solid';
 import { ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Image } from 'react-native';
 import Comment from './Comment';
-import { getRecipeyById } from '../api/apiRecipe';
+import { daleteFood, deleteFood, getRecipeyById } from '../api/apiRecipe';
 import { KeyboardAvoidingView } from 'react-native';
 import { FlatList } from 'react-native';
 import { TextInput } from 'react-native';
@@ -19,10 +19,12 @@ const DetailScreen = () => {
     const [detailPost, setDetailPost] = useState({})
     const [avatar, setAvatar] = useState(require('../assets/images/user_default.png'))
     const [openSetting, setOpenSetting] = useState(false)
+    const [userId, setUserId] = useState('')
+    const [openSelect, setOpenSelect] = useState(false)
     const [editComment, setEditComment] = useState({})
     const [openEdit, setOpenEdit] = useState(false)
     const [status, setStatus] = useState(false)
-    const [thumnail, setThumnail] = useState(require('../assets/images/food_11.png'))
+    const [thumnail, setThumnail] = useState(require('../assets/images/user_default.png'))
 
     const router = useRoute()
     const navigation = useNavigation();
@@ -67,6 +69,37 @@ const DetailScreen = () => {
         setOpenSetting(false)
     }
 
+
+    const handleSelectWithPost = (value) => {
+        if (value == "Edit") {
+            navigation.navigate("UpdatePost", {
+                id: id
+            })
+
+        } else if (value == "Delete") {
+            Alert.alert("Thông báo", "Bạn có chắc chắn xóa bài viết?", [
+                {
+                    text: 'Không',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Có',
+                    onPress: () => {
+                        deleteFood(id).then(res =>
+                            console.log(res)).catch(err => console.log(err))
+                        // SecureStore.deleteItemAsync('accessToken').then(
+                        //     navigation.navigate('Login')
+                        // )
+                    }
+                },
+
+            ])
+        } else if (value === "Cancel") {
+            setOpenSelect(false)
+        }
+        setOpenSelect(false)
+    }
     const handleChangeSave = () => {
         console.log(status)
         if (status == 1) {
@@ -83,11 +116,14 @@ const DetailScreen = () => {
     useEffect(() => {
         getRecipeyById(id).then(res => {
             const data = res.data
+            console.log(data);
             setDetailPost(data)
             if (res?.user?.avatar) {
                 setAvatar(res.user.avatar)
             }
-            // setStatus(res.status)
+            setUserId(res?.user?.id)
+            // console.log(data.post.img);
+            setThumnail({ uri: `${data.post.img}` })
         }
         ).catch(err => {
             console.log("failed");
@@ -96,7 +132,18 @@ const DetailScreen = () => {
 
     }, [])
 
-
+    const check = status === 1 ?
+        <TouchableOpacity
+            className='bg-yellow-400 p-2 rounded-full'
+            onPress={handleChangeSave}>
+            <BookMark size="24" color="black" />
+        </TouchableOpacity>
+        :
+        <TouchableOpacity
+            className='bg-yellow-400 p-2 rounded-full'
+            onPress={handleChangeSave}>
+            <BookmarkIcon size="24" color="black" />
+        </TouchableOpacity>
 
     return (
         <KeyboardAvoidingView
@@ -120,19 +167,15 @@ const DetailScreen = () => {
                         <View style={style.border}>
                             <View className="flex-row justify-end mb-1">
                                 {/* thieu */}
-                                {status === 1 ?
-                                    <TouchableOpacity
-                                        className='bg-yellow-400 p-2 rounded-full'
-                                        onPress={handleChangeSave}>
-                                        <BookMark size="24" color="black" />
-                                    </TouchableOpacity>
-                                    :
-                                    <TouchableOpacity
-                                        className='bg-yellow-400 p-2 rounded-full'
-                                        onPress={handleChangeSave}>
-                                        <BookmarkIcon size="24" color="black" />
-                                    </TouchableOpacity>
+                                {
+                                    detailPost.owner ? <View>
+                                        <TouchableOpacity
+                                            onPress={() => setOpenSelect(true)}>
+                                            <EllipsisHorizontalIcon size="24" color="black" />
+                                        </TouchableOpacity>
+                                    </View> : check
                                 }
+
 
                             </View>
                             <Text className="font-semibold text-3xl w-64">{detailPost?.post?.content}</Text>
@@ -151,7 +194,9 @@ const DetailScreen = () => {
                     </View>
                     <Text className="mx-3 text-base my-3">{detailPost?.post?.description}</Text>
                     <View className="mx-3 mb-3">
-                        <Image style={{ width: '100%' }} source={detailPost?.post?.img} />
+                        {detailPost?.post?.img &&
+                            <Image style={{ height: 250, width: '100%' }} source={{ uri: `${detailPost.post.img}` }} />
+                        }
                     </View>
                     <Text className="mx-3 mb-3 text-gray-400">Thời gian thực hiện: {detailPost?.post?.timeCooking}</Text>
                     <View>
@@ -173,8 +218,8 @@ const DetailScreen = () => {
                         }
 
                         <Text className="mx-3 mb-2 font-semibold text-xl">Nguyên liệu phụ</Text>
-                        {detailPost?.post?.branchFood &&
-                            detailPost?.post?.branchFood.map((item, index) => {
+                        {detailPost?.post?.subFood &&
+                            detailPost?.post?.subFood.map((item, index) => {
                                 return (
                                     <View key={index} className="mx-3 mb-2 flex-row items-center">
                                         <View className="w-4 h-4 rounded-full" style={style.circle}>
@@ -193,8 +238,8 @@ const DetailScreen = () => {
                     </View>
                     <View style={style.bottomPost} className='my-3 pb-3 mx-3'>
                         <Text className="mb-3 font-semibold text-2xl">Hướng dẫn nấu</Text>
-                        {detailPost?.post?.guide &&
-                            detailPost?.post?.guide.map((step, index) => {
+                        {detailPost?.post?.guideCooking &&
+                            detailPost?.post?.guideCooking.map((step, index) => {
                                 return (
                                     <View key={index} className="flex-row  mb-2">
                                         <View
@@ -210,7 +255,7 @@ const DetailScreen = () => {
                     <View className="mx-3">
                         <Text className="mb-3 font-semibold text-2xl w-72">Hãy cho tôi biết cảm nhận của bạn.</Text>
                     </View>
-                    <Comment id={id} handleOpenSetting={handleOpenSetting} />
+                    <Comment id={id} handleOpenSetting={handleOpenSetting} userId={userId} />
 
 
 
@@ -300,6 +345,49 @@ const DetailScreen = () => {
 
                 </TouchableOpacity>
             }
+
+            {
+                openSelect &&
+                <TouchableOpacity
+                    onPress={() => setOpenSetting(false)}
+                    className="flex-1 bg-[#5a5a5ada] justify-center"
+                    style={{ position: 'absolute', width: '100%', zIndex: 100 }}>
+                    <FlatList
+                        className='my-80 mx-10 bg-white rounded-md'
+                        data={[
+                            {
+                                key: 'Xóa bài viết',
+                                value: 'Delete'
+                            },
+                            {
+                                key: 'Sửa bài viết',
+                                value: 'Edit'
+                            },
+                            {
+                                key: 'Hủy',
+                                value: 'Cancel'
+                            }
+                        ]}
+
+                        renderItem={({ item }) =>
+                        (
+                            <TouchableOpacity
+                                onPress={() => handleSelectWithPost(item.value)}
+                            >
+                                <View style={style.item}>
+                                    <Text style={style.select}>
+                                        {item.key}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        )
+
+                        }
+                    />
+
+                </TouchableOpacity>
+            }
+
 
 
         </KeyboardAvoidingView >

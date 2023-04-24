@@ -4,13 +4,13 @@ import trending from '../data/Trendding'
 
 
 export const getRecipeByKeyWord = (keyword) => {
-    // return axios.get(
-    //     API_URL + GET_RECIPE_BY_KEYWORD,
-    //  {
-    //     params: {
-    //         keyword: keyword
-    //     }
-    // }
-    // )
-    return trending;
+    return axios.get(
+        API_URL + GET_RECIPE_BY_KEYWORD,
+        {
+            params: {
+                keyword: keyword
+            }
+        }
+    )
+    // return trending;
 }

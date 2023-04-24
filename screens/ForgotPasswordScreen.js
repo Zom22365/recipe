@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, TextInput, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, Image, TextInput, Keyboard, TouchableWithoutFeedback, Alert, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid'
@@ -12,17 +12,24 @@ const ForgotPasswordScreen = () => {
     const [account, setAccount] = useState({
         email: ""
     })
+    const [isLoanding, setLoanding] = useState(false)
 
     const handleDismissKeyboard = () => {
         Keyboard.dismiss()
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (account.email === "") {
             Alert.alert("Nhập địa chỉ email.")
         } else {
-            forgotPassword(account.email).then(res =>
-                alert("kiểm tra mail")).catch(err => alert("Hãy thử lại."))
+            setLoanding(true)
+            await forgotPassword(account.email).then(res => {
+                setLoanding(false)
+                alert("Vui lòng kiểm tra mail.")
+            }).catch(err => {
+                setLoanding(false)
+                alert("Lấy mật khẩu không thành công. Vui lòng thử lại")
+            })
         }
 
     }
@@ -34,6 +41,15 @@ const ForgotPasswordScreen = () => {
                 backgroundColor: themeColors.bg
             }}
             >
+                {
+                    isLoanding &&
+                    <View
+                        className="flex-1 bg-[#ffffffa1] justify-center"
+                        style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 100 }}>
+                        <ActivityIndicator size="large" color='hsl(210,95%,69%)'
+                        />
+                    </View>
+                }
                 <View className="flex">
                     <View className="flex-row justify-start mt-12 mb-5">
                         <TouchableOpacity

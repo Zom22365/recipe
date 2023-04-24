@@ -23,20 +23,26 @@ const SearchScreen = () => {
 
     useEffect(() => {
 
-        const resTrending = getRecipeTrending();
-        setTrending(resTrending)
+
+        getRecipeTrending().then(
+            res => {
+                const data = res.data
+                setTrending(data)
+            }
+        ).catch(err => {
+            console.log("failed");
+        })
 
     }, [])
 
 
-    const handleSearch = () => {
+    const handleSearch = async () => {
         Keyboard.dismiss()
         if (keyword !== "") {
             setKeySearch(keyword)
-            getRecipeByKeyWord()
-            const searchresult = trending.filter((i, index) => i?.name.includes(keyword))
-            // console.log(searchresult)
-            const result = searchresult.map((item, index) => {
+            const res = await getRecipeByKeyWord(keyword)
+            const data = await res.data;
+            const result = data.map((item, index) => {
                 return (
                     <CardFoodComponent key={index} {...item} />
                 )

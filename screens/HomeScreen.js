@@ -18,13 +18,15 @@ const HomeScreen = () => {
     const [trendingByLike, setTrendingByLike] = useState([])
 
     useEffect(() => {
-        const res = getCategories();
-        setCategoies(res);
+        getCategories().then(
+            res => {
+                setCategoies(res.data);
+            }
+        )
 
         getRecipeTrending().then(
             res => {
                 const data = res.data
-                console.log(data);
                 setTrending(data)
             }
         ).catch(err => {
@@ -53,7 +55,8 @@ const HomeScreen = () => {
                 <HeaderComponent />
 
                 <View style={{ height: 418 }}>
-                    <Swiper autoplay={false} >
+                    <Swiper autoplay={true}
+                        showsPagination={false}>
                         {trendingByLike.map((item, index) => {
                             if (index < 3) {
                                 return (<BannerComponent key={index} {...item} />)

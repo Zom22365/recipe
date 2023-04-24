@@ -13,11 +13,8 @@ const WelcomeScreen = () => {
     useEffect(() => {
         let token = ''
         async function getToken() {
-            console.log("here");
             token = await SecureStore.getItemAsync('accessToken') || ""
             if (token && isFirst !== true) {
-                console.log("here1");
-
                 const config = {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
@@ -26,7 +23,6 @@ const WelcomeScreen = () => {
                 ).catch(
                 )
             } else if (token === "" && isFirst !== true) {
-                console.log("here2");
                 navigation.navigate("Login")
             }
 
