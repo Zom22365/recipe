@@ -184,7 +184,7 @@ const FormPostScreen = () => {
             setImage(null)
             setMainFood([])
             setBranchFood([])
-            setGuide([])
+            setGuideFood([])
             alert("Đăng bài thành công")
         } catch {
             setLoanding(false)

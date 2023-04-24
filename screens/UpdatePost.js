@@ -39,11 +39,12 @@ const UpdatePost = () => {
     const [categories, setCategoies] = useState([])
     const [category, setCategory] = useState([])
 
+    const navigation = useNavigation()
 
     const router = useRoute()
 
     const { id } = router.params
-    // console.log(id);
+    console.log(id);
     useEffect(() => {
         getCategories().then(
             res => {
@@ -94,7 +95,7 @@ const UpdatePost = () => {
         setMainFood(newMainFood);
     }
 
-    const foodMain = mainFood.map((food, index) => {
+    const foodMain = mainFood?.map((food, index) => {
         return (
             <View className=" flex-row p-3 items-center bg-gray-100 mr-3 mb-3 rounded-xl">
                 <Text className="mr-2" >{food}</Text>
@@ -120,7 +121,7 @@ const UpdatePost = () => {
         setBranchFood(newBranchFood);
     }
 
-    const foodBranch = branchFood.map((food, index) => {
+    const foodBranch = branchFood?.map((food, index) => {
         return (
             <View className=" flex-row p-3 items-center bg-gray-100 mr-3 mb-3 rounded-xl">
                 <Text className="mr-2" >{food}</Text>
@@ -172,7 +173,7 @@ const UpdatePost = () => {
             try {
                 const response = await upLoadPostImg(dataForm)
                 const data = await response.json();
-                setImg(data?.data)
+                setImage(data?.data)
                 setLoanding(false)
 
                 // alert("Tải ảnh thành công.")
@@ -193,25 +194,33 @@ const UpdatePost = () => {
             id: id,
             categoryId: post.categoryId,
             content: post.content,
-            img: img,
+            img: image,
             timeCooking: post.timeCooking,
             description: post.description,
             mainFood: mainFood,
             subFood: branchFood,
             guideCooking: guideFood
         }
+        console.log(body);
         setLoanding(true)
         try {
             setLoanding(false)
-            await updateFood(body)
+            await updateFood(body).then(
+                res => {
+
+                    console.log("ok")
+                    alert("Cập nhật thành công")
+                    navigation.navigate("Profile")
+                }
+            )
             // const data = await res.data
             // console.log(data);
-            setPost({})
-            setImage(null)
-            setMainFood([])
-            setBranchFood([])
-            setGuide([])
-            alert("Cập nhật thành công")
+            // setPost({})
+            // setImage(null)
+            // setMainFood([])
+            // setBranchFood([])
+            // setGuideFood([])
+
         } catch {
             setLoanding(false)
             alert("Cập nhật không thành công")
@@ -219,7 +228,7 @@ const UpdatePost = () => {
 
     }
 
-    const guides = guideFood.map((food, index) => {
+    const guides = guideFood?.map((food, index) => {
         return (
             <View className=" flex-row gap-1 p-3 justify-between items-start bg-gray-100 mr-3 mb-3 rounded-xl">
                 <View className="flex-row">

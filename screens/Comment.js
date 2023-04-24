@@ -61,10 +61,12 @@ const Comment = (props) => {
 
     }
 
+
     const onViewProfile = (id) => {
         if (id == props.userId) {
             navigation.navigate("Profile")
         } else {
+            console.log("id" + id);
             navigation.navigate("ProfileOther", {
                 id: id
             })
@@ -187,7 +189,7 @@ const Comment = (props) => {
                     <View className=" mb-5">
                         <View className="flex-row items-start">
                             <TouchableOpacity className="mr-3"
-                                onPress={() => onViewProfile(item.id)}>
+                                onPress={() => onViewProfile(item.userId.id)}>
                                 <Image
                                     className='rounded-full w-8 h-8'
 

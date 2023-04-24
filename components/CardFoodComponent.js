@@ -38,12 +38,12 @@ const CardFoodComponent = (props) => {
                         {props.content}
                     </Text>
                 </View>
-                <View className='px-1 pb-2 flex-row'>
+                {/* <View className='px-1 pb-2 flex-row'>
                     <Image
                         className='rounded-full w-6 h-6 mr-2'
                         source={avatar} />
                     <Text className='pt-1'>{props?.chef?.name}</Text>
-                </View>
+                </View> */}
             </View>
         </TouchableOpacity>
     )

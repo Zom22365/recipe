@@ -16,6 +16,7 @@ const HomeScreen = () => {
     const [categories, setCategoies] = useState([])
     const [trending, setTrending] = useState([])
     const [trendingByLike, setTrendingByLike] = useState([])
+    const data = [1, 2, 3, 4, 5, 6]
 
     useEffect(() => {
         getCategories().then(

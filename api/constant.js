@@ -18,7 +18,7 @@ export const GET_MAILER_FORGOT_PASSWORD = "/mailer/forgotPassword"
 export const POST_CLOUDING_UPLOAD_AVATAR = "/clouding/upload/avatar"
 export const PUT_CLOUDING_UPDATE_AVATAR = "/clouding/update/avatar"
 export const POST_CLOUDING_POST = "/clouding/upload/imgPost"
-export const DELETE_CLOUDING_DELETE_AVATAR = "/clouding/delete/avatar"
+export const DELETE_CLOUDING_DELETE_AVATAR = "/clouding/del/avatar"
 
 
 export const GET_CATEGORIES = "/category"
@@ -32,7 +32,8 @@ export const DELETE_POST = "/post/delFood/"
 export const GET_POST_CATEGORY = "/post/getCategory"
 export const GET_RECIPE_MY = "/post/getUser"
 export const GET_ACCOUNT_PROFILE_USER = "/post/profileUser/"
-export const POST_LIKE = "/post/likePost/"
+export const POST_LIKE = "/post/getListPostLikeOfUser"
+export const POST_NEW_LIKE = "/post/likePost/"
 
 export const GET_COMMENT_BY_POST_ID = "/comment/"
 export const GET_COMMENT_BY_ID = "/"

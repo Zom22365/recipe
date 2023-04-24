@@ -4,10 +4,10 @@ import HeaderComponent from '../components/HeaderComponent'
 import { EllipsisHorizontalIcon } from 'react-native-heroicons/outline';
 import CardFoodComponent from '../components/CardFoodComponent';
 import { FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { getPostUser, getProfile } from '../api/apiAcount';
+import { getPostLike, getPostUser, getProfile } from '../api/apiAcount';
 import FooterComponent from '../components/FooterComponent';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // import { value } from 'deprecated-react-native-prop-types/DeprecatedTextInputPropTypes';
@@ -34,8 +34,10 @@ const ProfileScreen = () => {
         "updatedAt": ""
     })
     const [post, setPost] = useState([])
+    const [listLike, setListLike] = useState([])
     const [countPost, setCountPost] = useState(0)
     const navigation = useNavigation();
+    const isFocused = useIsFocused();
 
     const handleSelect = (value) => {
         if (value == "EditProfile") {
@@ -73,14 +75,22 @@ const ProfileScreen = () => {
         })
 
         getPostUser().then(res => {
-            console.log(res.data);
-            setPost(res.data)
+            const data = res?.data
+            setPost(data?.post)
         }).catch(err => {
             console.log(err)
         }
         )
 
-    }, [])
+        getPostLike().then(res => {
+            console.log(res.data);
+            setListLike(res.data)
+        }).catch(err => {
+            console.log(err)
+        }
+        )
+
+    }, [isFocused, active])
 
 
 
@@ -104,7 +114,7 @@ const ProfileScreen = () => {
                         </View>
                         <View className="justify-center">
                             <Text style={style.title} >{profile.username}</Text>
-                            <Text>{post.length} bài viết | 100 yêu thích</Text>
+                            <Text>{post.length} bài viết | {listLike.length} yêu thích</Text>
                         </View>
                         <View>
                             <TouchableOpacity
@@ -134,13 +144,13 @@ const ProfileScreen = () => {
                                     )
                                 })
                             }
-                            {/* {active == 'provite' &&
-                                data1.map((item, index) => {
+                            {active == 'provite' &&
+                                listLike.map((item, index) => {
                                     return (
-                                        <CardFoodComponent key={index} />
+                                        <CardFoodComponent key={index} {...item} />
                                     )
                                 })
-                            } */}
+                            }
 
                         </View>
                     </View>

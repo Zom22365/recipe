@@ -1,4 +1,4 @@
-import { View, Text, Keyboard, TextInput, ScrollView, StyleSheet, StatusBar, SafeAreaView, ActivityIndicator } from 'react-native'
+import { View, Text, Keyboard, TextInput, ScrollView, StyleSheet, StatusBar, SafeAreaView, ActivityIndicator, Alert } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { KeyboardAvoidingView } from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native'
@@ -38,6 +38,7 @@ const EditProfile = () => {
     const sex = ['Nữ', 'Nam']
     const navigation = useNavigation();
     const [date, setDate] = useState(new Date());
+    const [reload, setReload] = useState(false)
     const [dataAvatar, setDataAvatar] = useState([
         {
             key: 'Thay đổi ảnh đại diện',
@@ -101,7 +102,7 @@ const EditProfile = () => {
         }
 
         getToken()
-    }, [load])
+    }, [load, reload])
 
     const handleDismissKeyboard = () => {
         Keyboard.dismiss()
@@ -154,6 +155,8 @@ const EditProfile = () => {
                     onPress: () => {
                         deleleAvatar().then(res => {
                             alert("Xóa ảnh thành công.")
+                            setReload(true)
+
                         }).catch(
                             alert("Xóa ảnh không thành công")
                         )

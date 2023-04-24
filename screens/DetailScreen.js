@@ -9,11 +9,12 @@ import { ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Image } from 'react-native';
 import Comment from './Comment';
-import { daleteFood, deleteFood, getRecipeyById } from '../api/apiRecipe';
+import { daleteFood, deleteFood, getRecipeyById, postNewLike } from '../api/apiRecipe';
 import { KeyboardAvoidingView } from 'react-native';
 import { FlatList } from 'react-native';
 import { TextInput } from 'react-native';
 import { Alert } from 'react-native';
+import { getProfile } from '../api/apiAcount';
 
 const DetailScreen = () => {
     const [detailPost, setDetailPost] = useState({})
@@ -24,6 +25,7 @@ const DetailScreen = () => {
     const [editComment, setEditComment] = useState({})
     const [openEdit, setOpenEdit] = useState(false)
     const [status, setStatus] = useState(false)
+    const [profile, setProfile] = useState({})
     const [thumnail, setThumnail] = useState(require('../assets/images/user_default.png'))
 
     const router = useRoute()
@@ -86,8 +88,13 @@ const DetailScreen = () => {
                 {
                     text: 'Có',
                     onPress: () => {
-                        deleteFood(id).then(res =>
-                            console.log(res)).catch(err => console.log(err))
+                        deleteFood(id).then(res => {
+
+                            console.log("ok")
+                            navigation.navigate("Profile")
+                        }
+                        ).catch(err =>
+                            console.log(err))
                         // SecureStore.deleteItemAsync('accessToken').then(
                         //     navigation.navigate('Login')
                         // )
@@ -101,28 +108,46 @@ const DetailScreen = () => {
         setOpenSelect(false)
     }
     const handleChangeSave = () => {
-        console.log(status)
-        if (status == 1) {
-            setStatus(0)
+        // console.log(detailPost.post.id);
+        postNewLike(detailPost.post.id)
+            .then(res => {
+                console.log("Lưu thành công"),
+                    setStatus(true)
+            })
+            .catch(err => {
+                console.log("lưu không thành công"),
+                    setStatus(false)
+            })
 
-        } else {
-            setStatus(1)
-            // postStatusChange()
-
-        }
     }
 
-
+    const onViewProfile = () => {
+        if (detailPost.owner) {
+            navigation.navigate("Profile")
+        } else {
+            console.log("userid" + userId);
+            navigation.navigate("ProfileOther", {
+                id: userId
+            })
+        }
+    }
     useEffect(() => {
+
+        getProfile().then(res => {
+            setProfile(res.data.id)
+        })
+
+
         getRecipeyById(id).then(res => {
             const data = res.data
-            console.log(data);
             setDetailPost(data)
+            console.log((data));
             if (res?.user?.avatar) {
                 setAvatar(res.user.avatar)
             }
-            setUserId(res?.user?.id)
-            // console.log(data.post.img);
+
+            setUserId(data.user?.id)
+            setStatus(data.save)
             setThumnail({ uri: `${data.post.img}` })
         }
         ).catch(err => {
@@ -131,8 +156,7 @@ const DetailScreen = () => {
 
 
     }, [])
-
-    const check = status === 1 ?
+    const check = status == true ?
         <TouchableOpacity
             className='bg-yellow-400 p-2 rounded-full'
             onPress={handleChangeSave}>
@@ -181,10 +205,15 @@ const DetailScreen = () => {
                             <Text className="font-semibold text-3xl w-64">{detailPost?.post?.content}</Text>
                             <View className="flex-row items-center gap-2 mt-3">
                                 <View>
-                                    <Image
-                                        className='rounded-full w-8 h-8'
-                                        source={avatar}
-                                    />
+                                    <TouchableOpacity
+
+                                        onPress={onViewProfile}>
+
+                                        <Image
+                                            className='rounded-full w-8 h-8'
+                                            source={avatar}
+                                        />
+                                    </TouchableOpacity>
                                 </View>
                                 <View >
                                     <Text className="text-base" >{detailPost?.user?.username}</Text>
@@ -195,7 +224,10 @@ const DetailScreen = () => {
                     <Text className="mx-3 text-base my-3">{detailPost?.post?.description}</Text>
                     <View className="mx-3 mb-3">
                         {detailPost?.post?.img &&
+
+
                             <Image style={{ height: 250, width: '100%' }} source={{ uri: `${detailPost.post.img}` }} />
+
                         }
                     </View>
                     <Text className="mx-3 mb-3 text-gray-400">Thời gian thực hiện: {detailPost?.post?.timeCooking}</Text>
@@ -255,7 +287,7 @@ const DetailScreen = () => {
                     <View className="mx-3">
                         <Text className="mb-3 font-semibold text-2xl w-72">Hãy cho tôi biết cảm nhận của bạn.</Text>
                     </View>
-                    <Comment id={id} handleOpenSetting={handleOpenSetting} userId={userId} />
+                    <Comment id={id} handleOpenSetting={handleOpenSetting} userId={profile} />
 
 
 
