@@ -15,7 +15,7 @@ const HeaderComponent = () => {
         <TouchableOpacity
             className="px-3 pb-3 w-20"
             onPress={() => navigation.navigate('Home')}>
-            <Image source={require('../assets/images/logo.png')}
+            <Image source={require('../assets/images/logo1.png')}
                 style={{ width: 80, height: 24 }} />
         </TouchableOpacity>
 

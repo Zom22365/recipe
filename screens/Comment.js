@@ -79,10 +79,14 @@ const Comment = (props) => {
                 <View className=" mb-5">
                     <View className="flex-row items-start">
                         <View className="mr-3">
-                            <Image
-                                className='rounded-full w-8 h-8'
-                                source={item?.userId?.avatar ? { uri: item?.userId?.avatar } : avatarDefault}
-                            />
+                            <TouchableOpacity className="mr-3"
+                                onPress={() => onViewProfile(item.userId.id)}>
+                                <Image
+                                    className='rounded-full w-8 h-8'
+
+                                    source={item?.userId?.avatar ? { uri: item?.userId?.avatar } : avatarDefault}
+                                />
+                            </TouchableOpacity>
                         </View>
                         <View className=" px-2 py-1 bg-gray-100 text-gray-700 rounded-2xl mb-1 flex-row">
                             <View
@@ -124,10 +128,14 @@ const Comment = (props) => {
 
                                         {/* <Text className="mr-3 bg-red-200 px-3 py-2 ">{rep.userId}</Text> */}
                                         <View className="mr-3">
-                                            <Image
-                                                className='rounded-full w-8 h-8'
-                                                source={rep?.userId?.avatar ? { uri: rep?.userId?.avatar } : avatarDefault}
-                                            />
+                                            <TouchableOpacity
+                                                onPress={() => onViewProfile(rep.userId.id)}
+                                                className="mr-3">
+                                                <Image
+                                                    className='rounded-full w-8 h-8'
+                                                    source={rep?.userId?.avatar ? { uri: rep?.userId?.avatar } : avatarDefault}
+                                                />
+                                            </TouchableOpacity>
                                         </View>
                                         <View className=" px-2 py-1 bg-gray-100 text-gray-700 rounded-2xl mb-1 flex-row">
                                             <View
@@ -237,7 +245,9 @@ const Comment = (props) => {
                                             >
 
                                                 {/* <Text className="mr-3 bg-red-200 px-3 py-2 ">{rep.userId}</Text> */}
-                                                <TouchableOpacity className="mr-3">
+                                                <TouchableOpacity
+                                                    onPress={() => onViewProfile(rep.userId.id)}
+                                                    className="mr-3">
                                                     <Image
                                                         className='rounded-full w-8 h-8'
                                                         source={rep?.userId?.avatar ? { uri: rep?.userId?.avatar } : avatarDefault}

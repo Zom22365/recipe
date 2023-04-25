@@ -1,6 +1,6 @@
 import Config from "react-native-config";
 
-export const API_URL = "https://mora.serveo.net"
+export const API_URL = "https://quin.serveo.net"
 
 
 export const GET_ACCOUNT_PROFILE = "/account/profile"
